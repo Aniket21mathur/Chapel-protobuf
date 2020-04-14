@@ -38,11 +38,22 @@ module protobuf {
       }
       return s;
     }
+    
+    proc load(s: bytes) {
+      var shift = 0;
+      val = 0;
+      for i in s {
+          val = val + ((i & 0x7F): int << shift);
+          shift = shift + 7;
+      }
+    }
 
   }
 }
 
 use protobuf;
-var foo = new VariantValue(270);
+var foo = new VariantValue(100);
 writeln(foo.getValue());
 writeln(foo.dump());
+foo.load(b"\x8e\x02");
+writeln(foo.getValue());
