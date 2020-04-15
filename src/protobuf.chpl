@@ -2,7 +2,7 @@
 module protobuf {
   
   //Variant wire type to support int, bool, enum
-  class VariantValue {
+  class VarintValue {
     var val: int;
 
     proc setValue(x: int): bool {
@@ -52,8 +52,6 @@ module protobuf {
 }
 
 use protobuf;
-var foo = new VariantValue(100);
-writeln(foo.getValue());
-writeln(foo.dump());
+var foo = new VarintValue();
 foo.load(b"\x8e\x02");
 writeln(foo.getValue());
