@@ -1,7 +1,9 @@
 /* Documentation for protobuf */
 module protobuf {
   
-  //Variant wire type to support int, bool, enum
+  use Map;
+
+  //Varint wire type to support int
   class VarintValue {
     var val: int;
 
@@ -49,9 +51,39 @@ module protobuf {
     }
 
   }
+
+
+  class Message {
+    var tupl;
+    var fieldNames, fieldValues;
+
+    proc init(tupl) {
+      this.tupl = tupl;
+
+      var x: [0..tupl.size-1] string;
+      var y = new map(string, this.tupl[0](1).type);
+      for i in 0..tupl.size-1 {
+        x[i] = this.tupl[i](0);
+        y[this.tupl[i][0]] = this.tupl[i][1];
+      }
+      this.fieldNames = x;
+      this.fieldValues = y;
+    }
+
+    proc setValue(fieldName: string, fieldValue) {
+      fieldValues[fieldName]!.setValue(fieldValue);
+    }
+
+    proc getValue(fieldName: string) {
+      return fieldValues[fieldName]!.getValue();
+    }
+    
+  }
+
 }
 
 use protobuf;
-var foo = new VarintValue();
-foo.load(b"\x8e\x02");
-writeln(foo.getValue());
+var mytuple: owned VarintValue? = new VarintValue();
+var rnd = new Message([('a', mytuple)]);
+rnd.setValue('a', 150);
+writeln(rnd.getValue('a'));
