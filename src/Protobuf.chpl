@@ -1,5 +1,5 @@
 /* Documentation for protobuf */
-module protobuf {
+module Protobuf {
   use Map;
 
   const VarintType = 0;
@@ -104,9 +104,3 @@ module protobuf {
   }
 
 }
-
-use protobuf;
-var mytuple: owned VarintValue? = new VarintValue();
-var rnd = new Message([('a', mytuple)]);
-rnd.setValue('a', 150);
-writeln(rnd.dump() == b"\x08\x96\x01");
