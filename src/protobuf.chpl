@@ -1,7 +1,13 @@
 /* Documentation for protobuf */
 module protobuf {
-  
   use Map;
+
+  const VarintType = 0;
+  const MessageType = 1;
+
+  var WIRE_TYPES = new map(string, int);
+  WIRE_TYPES["VarintType"] = VarintType;
+  WIRE_TYPES["MessageType"] = MessageType;
 
   //Varint wire type to support int
   class VarintValue {
@@ -78,6 +84,23 @@ module protobuf {
       return fieldValues[fieldName]!.getValue();
     }
     
+    proc dump(): bytes throws {
+      var s: bytes = b"";
+      var fieldNumber = 1;
+      for fieldName in fieldNames {
+        var keyarg = (fieldNumber << 3) | WIRE_TYPES["VarintType"];
+        var key = new VarintValue(keyarg);
+        s = s + key.dump();
+        s = s + fieldValues[fieldName]!.dump();
+        fieldNumber = fieldNumber + 1;
+      }
+      return s;
+    }
+
+    proc load(s: bytes) {
+      return 0;
+    }
+
   }
 
 }
@@ -86,4 +109,4 @@ use protobuf;
 var mytuple: owned VarintValue? = new VarintValue();
 var rnd = new Message([('a', mytuple)]);
 rnd.setValue('a', 150);
-writeln(rnd.getValue('a'));
+writeln(rnd.dump() == b"\x08\x96\x01");
