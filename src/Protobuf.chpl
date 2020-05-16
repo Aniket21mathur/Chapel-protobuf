@@ -56,4 +56,22 @@ module Protobuf {
     return s[s.size-len..s.size-1];
   }
 
+  proc stringDump(val: string): bytes throws {
+    const newVal = val.encode();
+    return bytesDump(newVal);
+  }
+
+  proc stringLoad(s: bytes): string throws {
+    const bVaL = bytesLoad(s);
+    return bVaL.decode();
+  }
+
+  proc boolDump(val: bool): bytes throws {
+    return unsignedVarintDump(val: int);
+  }
+
+  proc boolLoad(s: bytes): bool {
+    return unsignedVarintLoad(s): bool;
+  }
+
 }
