@@ -43,6 +43,31 @@ proc myTest(test: borrowed Test) throws {
 
   test.assertTrue(boolLoad(b"\x01") == true);
   test.assertTrue(boolLoad(b"\x00") == false);
+
+  enum Color {GREEN = 0, RED = 1, BLUE = 2};
+  test.assertTrue(enumDump(Color.GREEN: int) == b"\x00");
+  test.assertTrue(enumDump(Color.RED: int) == b"\x01");
+  test.assertTrue(enumDump(Color.BLUE: int) == b"\x02");
+
+  test.assertTrue(enumLoad(b"\x00") == Color.GREEN: int);
+  test.assertTrue(enumLoad(b"\x01") == Color.RED: int);
+  test.assertTrue(enumLoad(b"\x02") == Color.BLUE: int);
+
+  test.assertTrue(unsignedFixed32Dump(0) == b"\x00\x00\x00\x00");
+  test.assertTrue(unsignedFixed32Dump(1000) == b"\xE8\x03\x00\x00");
+  test.assertTrue(unsignedFixed32Dump(300000000) == b"\x00\xA3\xE1\x11");
+
+  test.assertTrue(unsignedFixed32Load(b"\x00\x00\x00\x00") == 0);
+  test.assertTrue(unsignedFixed32Load(b"\xE8\x03\x00\x00") == 1000);
+  test.assertTrue(unsignedFixed32Load(b"\x00\xA3\xE1\x11") == 300000000);
+
+  test.assertTrue(unsignedFixed64Dump(0) == b"\x00\x00\x00\x00\x00\x00\x00\x00");
+  test.assertTrue(unsignedFixed64Dump(1000) == b"\xE8\x03\x00\x00\x00\x00\x00\x00");
+  test.assertTrue(unsignedFixed64Dump(300000000) == b"\x00\xA3\xE1\x11\x00\x00\x00\x00");
+
+  test.assertTrue(unsignedFixed64Load(b"\x00\x00\x00\x00\x00\x00\x00\x00") == 0);
+  test.assertTrue(unsignedFixed64Load(b"\xE8\x03\x00\x00\x00\x00\x00\x00") == 1000);
+  test.assertTrue(unsignedFixed64Load(b"\x00\xA3\xE1\x11\x00\x00\x00\x00") == 300000000);
 }
 
 UnitTest.main();
