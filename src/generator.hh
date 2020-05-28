@@ -5,6 +5,7 @@
 
 #include <google/protobuf/compiler/code_generator.h>
 #include <google/protobuf/descriptor.h>
+#include <google/protobuf/compiler/plugin.h>
 
 namespace chapel {
 
@@ -27,6 +28,12 @@ namespace chapel {
       string *error)
     const;
   };
+}
+
+int
+main(int argc, char *argv[]) {
+  chapel::Generator generator;
+  return PluginMain(argc, argv, &generator);
 }
 
 #endif /* PB_GENERATOR_GENERATOR_HH */

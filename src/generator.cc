@@ -35,11 +35,11 @@ namespace chapel {
         
         string filename = "out.chpl";
         
-        unique_ptr<io::ZeroCopyOutputStream> output(
+        unique_ptr< ZeroCopyOutputStream> output(
           generator_context->Open(filename));
           Printer printer(output.get(), '$');
           
-          printer->Print("Hello World");
+          printer.Print("Hello World");
         
     return true;
   }
