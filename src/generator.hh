@@ -30,10 +30,4 @@ namespace chapel {
   };
 }
 
-int
-main(int argc, char *argv[]) {
-  chapel::Generator generator;
-  return PluginMain(argc, argv, &generator);
-}
-
 #endif /* PB_GENERATOR_GENERATOR_HH */
