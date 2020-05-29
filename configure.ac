@@ -1,4 +1,4 @@
-AC_INIT([automake_hello_world], [1.0], [bug-automake@gnu.org])
+AC_INIT([chapel-protobuf], [1.0])
 AM_INIT_AUTOMAKE([subdir-objects foreign])
 
 AC_PROG_CXX
