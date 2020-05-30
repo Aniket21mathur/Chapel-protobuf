@@ -1,19 +1,17 @@
-#ifndef PB_GENERATOR_GENERATOR_HH
-#define PB_GENERATOR_GENERATOR_HH
+#ifndef PB_GENERATOR_HH
+#define PB_GENERATOR_HH
 
 #include <string>
 
 #include <google/protobuf/compiler/code_generator.h>
 #include <google/protobuf/descriptor.h>
-#include <google/protobuf/compiler/plugin.h>
 
 namespace chapel {
 
-  using ::std::string;
+  using namespace std;
 
-  using ::google::protobuf::compiler::CodeGenerator;
-  using ::google::protobuf::compiler::GeneratorContext;
-  using ::google::protobuf::FileDescriptor;
+  using namespace google::protobuf::compiler;
+  using namespace google::protobuf;
 
   class Generator : public CodeGenerator {
 
@@ -26,8 +24,8 @@ namespace chapel {
       const string &parameter,         
       GeneratorContext *generator_context,     
       string *error)
-    const;
+    const override;
   };
-}
+} // namespace chapel
 
-#endif /* PB_GENERATOR_GENERATOR_HH */
+#endif /* PB_GENERATOR_HH */
