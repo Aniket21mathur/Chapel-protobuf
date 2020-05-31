@@ -4,6 +4,8 @@
 #include <google/protobuf/stubs/strutil.h>
 
 #include <helpers.hh>
+#include <primitive_field.hh>
+#include <field_base.hh>
 
 namespace chapel {
   
@@ -53,4 +55,18 @@ namespace chapel {
     return relative_filename + file_extension;
   }
   
+  string GetFieldName(const FieldDescriptor* descriptor) {
+      return descriptor->name();
+  }
+
+  string GetPropertyName(const FieldDescriptor* descriptor) {
+    string property_name = UnderscoresToCamelCase(GetFieldName(descriptor));
+    property_name += "_";
+    return property_name;
+  }
+
+  FieldGeneratorBase* CreateFieldGenerator(const FieldDescriptor* descriptor) {
+    return new PrimitiveFieldGenerator(descriptor);
+  }
+
 } // namespace chapel

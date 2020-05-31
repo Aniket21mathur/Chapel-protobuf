@@ -19,8 +19,7 @@ namespace chapel {
     Generator();
     ~Generator();
     bool Generate(
-      const FileDescriptor
-        *descriptor,                   
+      const FileDescriptor *file,
       const string &parameter,         
       GeneratorContext *generator_context,     
       string *error)
