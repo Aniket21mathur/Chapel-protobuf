@@ -48,9 +48,9 @@ namespace chapel {
   string FieldGeneratorBase::type_name(const FieldDescriptor* descriptor) {
     switch (descriptor->type()) {
       case FieldDescriptor::TYPE_INT64:
-        return "int64";
+        return "int(64)";
       case FieldDescriptor::TYPE_INT32:
-        return "int32";
+        return "int(32)";
       default:
         GOOGLE_LOG(FATAL)<< "Unknown field type.";
         return "";
