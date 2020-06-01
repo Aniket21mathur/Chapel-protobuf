@@ -1,20 +1,22 @@
 #ifndef PB_PRIMITIVE_FIELD_HH
 #define PB_PRIMITIVE_FIELD_HH
 
-#include <string>
-
-#include <google/protobuf/compiler/code_generator.h>
+#include <google/protobuf/io/printer.h>
+#include <google/protobuf/descriptor.h>
 
 #include <field_base.hh>
 
 namespace chapel {
-
+  
+  using namespace google::protobuf;
+  using namespace google::protobuf::io;
+  
   class PrimitiveFieldGenerator : public FieldGeneratorBase {
    public:
     PrimitiveFieldGenerator(const FieldDescriptor* descriptor);
     ~PrimitiveFieldGenerator();
 
-    virtual void GenerateMembers(Printer* printer);
+    void GenerateMembers(Printer* printer);
   };
 
 }  // namespace chapel

@@ -14,7 +14,6 @@ namespace chapel {
   using namespace google::protobuf;
 
   class Generator : public CodeGenerator {
-
   public:
     Generator();
     ~Generator();
@@ -25,6 +24,7 @@ namespace chapel {
       string *error)
     const override;
   };
+
 } // namespace chapel
 
 #endif /* PB_GENERATOR_HH */

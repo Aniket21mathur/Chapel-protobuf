@@ -3,7 +3,6 @@
 
 #include <string>
 
-#include <google/protobuf/compiler/code_generator.h>
 #include <google/protobuf/descriptor.h>
 #include <google/protobuf/io/printer.h>
 
@@ -11,12 +10,10 @@ namespace chapel {
 
   using namespace std;
 
-  using namespace google::protobuf::compiler;
   using namespace google::protobuf;
   using namespace google::protobuf::io;
 
   class ReflectionClassGenerator {
-    
    public:
     ReflectionClassGenerator(const FileDescriptor* file);
     ~ReflectionClassGenerator();
