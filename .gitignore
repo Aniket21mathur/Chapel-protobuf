@@ -33,7 +33,7 @@ Makefile.in
 *.o
 
 # Executables
-src/protoc-gen-chpl
+src/plugin/protoc-gen-chpl
 
 # IDEs
 .vscode

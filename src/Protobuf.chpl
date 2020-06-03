@@ -122,4 +122,20 @@ module Protobuf {
     return val;
   }
 
+  proc messageDump(val, number, wireType): bytes throws {
+    var s: bytes = b"";
+    var fieldNumber = number;
+      var tagDump = unsignedVarintDump((fieldNumber << 3) | wireType);
+      s = s + tagDump;
+      s = s + unsignedVarintDump(val);
+      return s;
+  }
+
+  proc messageLoad(s:bytes) throws {
+    var tag = unsignedVarintLoad(s[0..0]);
+    var wireType = (tag & 0x7): int;
+    var fieldNumber = tag >> 3;
+    var val = unsignedVarintLoad(s[1..]);
+    return val;
+  }
 }
