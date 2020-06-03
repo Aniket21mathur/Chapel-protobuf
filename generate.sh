@@ -8,7 +8,7 @@ while getopts ":f:p:n:" opt; do
   case $opt in
     f) protoFile="$OPTARG"
     ;;
-    p) binPath="$OPTARG"
+    p) pathToBin="$OPTARG"
     ;;
     n) flag="$OPTARG"
     ;;
@@ -17,16 +17,15 @@ while getopts ":f:p:n:" opt; do
   esac
 done
 
-if [ ! -z "$binPath" ]; then
+if [ ! -z "$pathToBin" ]; then
   ./autogen.sh
-  ./configure --prefix=$binPath
+  ./configure --prefix=$pathToBin
   make
   make install
   
   if [ -z "$flag" ]; then
-    buildPath=bin/
-    fullPath="$binPath/$buildPath"
-    export PATH=$PATH:"$fullPath"
+    fullPath=$pathToBin/bin/
+    export PATH=$PATH:$fullPath
   fi
 else
   protoc --chpl_out=. $protoFile
