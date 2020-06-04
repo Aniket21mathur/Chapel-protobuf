@@ -13,17 +13,8 @@ namespace chapel {
     printer->Print(
       variables_,
       "var $property_name$: $type_name$ ;\n"
-      "var fieldNumber = $number$;\n"
       "proc $name$ { return $property_name$; }\n"
       "proc ref $name$ ref { return $property_name$; }\n"
-      "\n"
-      "proc serialize(): bytes {\n"
-      "  return messageDump($property_name$, fieldNumber, 0);\n"
-      "}\n"
-      "\n"
-      "proc unserialize(x: bytes) {\n"
-      "  $property_name$ = messageLoad(x);\n"
-      "}\n"
     );
   }
 

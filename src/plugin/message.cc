@@ -36,9 +36,11 @@ namespace chapel {
     map<string, string> vars;
     vars["record_name"] = record_name();
 
-    printer->Print(vars, "record $record_name$");
-    printer->Print(" {\n");
+    printer->Print("var numValMap = new map(int, c_void_ptr);\n");
+    printer->Print(vars, "record $record_name$ {\n");
+    printer->Print("\n");
     printer->Indent();
+
 
     for (int i = 0; i < descriptor_->field_count(); i++) {
       const FieldDescriptor* fieldDescriptor = descriptor_->field(i);
@@ -51,7 +53,35 @@ namespace chapel {
       generator->GenerateMembers(printer);
       printer->Print("\n");
     }
+
+    printer->Print(
+      "proc serialize(): bytes {\n"
+      "  if numValMap.isEmpty() then mapValues();\n"
+      "  return messageDump(numValMap);\n"
+      "}\n"
+      "\n"
+      "proc unserialize(x: bytes) {\n"
+      "  if numValMap.isEmpty() then mapValues();\n"
+      "  messageLoad(x, numValMap);\n"
+      "}\n");
+
+    printer->Print("\n");
+    printer->Print("proc mapValues() {\n");
+    printer->Indent();
+
+    for (int i = 0; i < descriptor_->field_count(); i++) {
+      const FieldDescriptor* fieldDescriptor = descriptor_->field(i);
+
+      printer->Print(
+        "numValMap.add($field_number$, c_ptrTo($field_name$));\n",
+        "field_number", StrCat(fieldDescriptor->number()),
+        "field_name", GetPropertyName(fieldDescriptor));
+    }
+
+    printer->Outdent();
+    printer->Print("}\n");
     
+    printer->Print("\n");
     printer->Outdent();
     printer->Print("}\n");
   }

@@ -27,15 +27,17 @@ module Protobuf {
     return s;
   }
 
-  proc unsignedVarintLoad(s: bytes): int {
+  proc unsignedVarintLoad(s: bytes): (int, int) {
     var shift: int = 0;
     var val: int = 0;
+    var len: int = 0;
     for i in s {
       val = val + ((i & 0x7F): int << shift);
       shift = shift + 7;
+      len = len + 1;
       if (i & 0x80) == 0 then break;
     }
-    return val;
+    return (val, len);
   }
 
   proc signedVarintDump(val: int): bytes throws {
@@ -44,7 +46,7 @@ module Protobuf {
   }
 
   proc signedVarintLoad(s: bytes): int {
-    const t = unsignedVarintLoad(s);
+    const (t, l) = unsignedVarintLoad(s);
     return (t >> 1) ^ (-(t & 1));
   }
 
@@ -54,7 +56,7 @@ module Protobuf {
   }
 
   proc bytesLoad(s: bytes): bytes {
-    const len = unsignedVarintLoad(s);
+    const (len, l) = unsignedVarintLoad(s);
     return s[s.size-len..s.size-1];
   }
 
@@ -73,7 +75,7 @@ module Protobuf {
   }
 
   proc boolLoad(s: bytes): bool {
-    return unsignedVarintLoad(s): bool;
+    return unsignedVarintLoad(s)(0): bool;
   }
 
   proc enumDump(val: int): bytes throws {
@@ -81,7 +83,7 @@ module Protobuf {
   }
 
   proc enumLoad(s: bytes): int {
-    return unsignedVarintLoad(s);
+    return unsignedVarintLoad(s)(0);
   }
 
   proc unsignedFixed32Dump(val: int(32)): bytes {
@@ -122,20 +124,29 @@ module Protobuf {
     return val;
   }
 
-  proc messageDump(val, number, wireType): bytes throws {
+  proc messageDump(numValMap): bytes throws {
     var s: bytes = b"";
-    var fieldNumber = number;
+    var wireType = 0;
+    for fieldNumber in numValMap.keys() {
       var tagDump = unsignedVarintDump((fieldNumber << 3) | wireType);
       s = s + tagDump;
-      s = s + unsignedVarintDump(val);
-      return s;
+      //ToDo Should be handled for generalized cases
+      s = s + unsignedVarintDump((numValMap[fieldNumber]:c_ptr(int)).deref());
+    }
+    return s;
   }
 
-  proc messageLoad(s:bytes) throws {
-    var tag = unsignedVarintLoad(s[0..0]);
-    var wireType = (tag & 0x7): int;
-    var fieldNumber = tag >> 3;
-    var val = unsignedVarintLoad(s[1..]);
-    return val;
+  proc messageLoad(s:bytes, ref numValMap) throws {
+    var tmp = s;
+    while tmp.size > 0 {
+      var (tag, tlen) = unsignedVarintLoad(tmp);
+      var wireType = (tag & 0x7): int;
+      var fieldNumber = (tag >> 3): int;
+      var (val, vlen) = unsignedVarintLoad(tmp[tlen..]);
+      tmp = tmp[tlen+vlen..];
+      (numValMap[fieldNumber]:c_ptr(int)).deref() = val;
+    }
+    return 0;
   }
+
 }
