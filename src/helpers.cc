@@ -12,7 +12,7 @@ namespace chapel {
     int lastindex = proto_file.find_last_of(".");
     return proto_file.substr(0, lastindex);
   }
-  
+
   string UnderscoresToCamelCase(const string& input) {
     string result;
     bool cap_next_letter = false;
@@ -48,7 +48,21 @@ namespace chapel {
       return UnderscoresToCamelCase(StripDotProto(base));
   }
 
+  bool ValidateInputFileName(const FileDescriptor* descriptor) {
+    string proto_file = descriptor->name();
+    int lastindex = proto_file.find_last_of(".");
+    if (proto_file.substr(lastindex+1) != "proto") {
+      return false;
+    }
+    return true;
+  }
+
   string GetOutputFile(const FileDescriptor* descriptor, string* error) {
+    bool valid_input_filename = ValidateInputFileName(descriptor);
+    if (!valid_input_filename) {
+      *error = "Input file should be a .proto file";
+      return "";
+    }
     string relative_filename = GetFileNameBase(descriptor);
     string file_extension = ".chpl";
     return relative_filename + file_extension;

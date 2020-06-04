@@ -15,8 +15,6 @@ namespace chapel {
 
   class FieldGeneratorBase;
   
-  string StripDotProto(const string& proto_file);
-  
   string UnderscoresToCamelCase(const string& input);
 
   string GetOutputFile(const FileDescriptor* descriptor, string*error);

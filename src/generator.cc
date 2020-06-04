@@ -27,6 +27,10 @@ namespace chapel {
         string filename_error = "";
         string filename = GetOutputFile(file, &filename_error);
 
+        if (filename.empty()) {
+          *error = filename_error;
+          return false;
+        }
         unique_ptr< ZeroCopyOutputStream> output(
             generator_context->Open(filename));
         Printer printer(output.get(), '$');
