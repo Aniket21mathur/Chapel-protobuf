@@ -32,6 +32,8 @@ namespace chapel {
       "*/\n"
       "\n"
       "use Protobuf;\n"
+      "use Map;\n"
+      "use SysCTypes;\n"
       "\n",
       "file_name", file_->name());
   }
