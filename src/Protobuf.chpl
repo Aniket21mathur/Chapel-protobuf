@@ -47,29 +47,21 @@ module Protobuf {
     return (val:int, len);
   }
 
-  proc messageDump(numValMap): bytes {
-    var s: bytes = b"";
+  proc messageFieldDump(fieldVal, fieldNumber, ref s) {
     var wireType = 0;
-    for fieldNumber in numValMap.keys() {
-      var tagDump = integerDump((fieldNumber << 3) | wireType);
-      s = s + tagDump;
-      //ToDo Should be handled for generalized cases
-      s = s + integerDump((numValMap[fieldNumber]:c_ptr(int)).deref());
-    }
-    return s;
+    var tagDump = integerDump((fieldNumber << 3) | wireType);
+    s = s + tagDump;
+    //ToDo Should be handled for generalized cases
+    s = s + integerDump(fieldVal);
   }
 
-  proc messageLoad(s:bytes, ref numValMap) {
-    var tmp = s;
-    while tmp.size > 0 {
-      var (tag, tlen) = integerLoad(tmp);
+  proc messageFieldLoad(ref s:bytes) {
+      var (tag, tlen) = integerLoad(s);
       var wireType = (tag & 0x7): int;
       var fieldNumber = (tag >> 3): int;
-      var (val, vlen) = integerLoad(tmp[tlen..]);
-      tmp = tmp[tlen+vlen..];
-      (numValMap[fieldNumber]:c_ptr(int)).deref() = val;
-    }
-    return 0;
+      var (val, vlen) = integerLoad(s[tlen..]);
+      s = s[tlen+vlen..];
+      return (fieldNumber, val);
   }
 
 }
