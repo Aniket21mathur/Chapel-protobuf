@@ -33,14 +33,22 @@ namespace chapel {
   }
 
   void MessageGenerator::Generate(Printer* printer) {
-    map<string, string> vars;
-    vars["record_name"] = record_name();
+    map<int, map<string, string>> vars;
 
-    printer->Print("var numValMap = new map(int, c_void_ptr);\n");
-    printer->Print(vars, "record $record_name$ {\n");
+    for (int i = 0; i < descriptor_->field_count(); i++) {
+      const FieldDescriptor* fieldDescriptor = descriptor_->field(i);
+      FieldGeneratorBase* field_obj;
+      
+      vars[i]["field_name"] = GetPropertyName(fieldDescriptor);
+      vars[i]["field_number"] = StrCat(fieldDescriptor->number());
+      vars[i]["field_type"] = field_obj->type_name(fieldDescriptor);
+    }
+    
+    printer->Print(
+      "record $record_name$ {\n",
+      "record_name", record_name());
     printer->Print("\n");
     printer->Indent();
-
 
     for (int i = 0; i < descriptor_->field_count(); i++) {
       const FieldDescriptor* fieldDescriptor = descriptor_->field(i);
@@ -54,33 +62,43 @@ namespace chapel {
       printer->Print("\n");
     }
 
-    printer->Print(
-      "proc serialize(): bytes {\n"
-      "  if numValMap.isEmpty() then mapValues();\n"
-      "  return messageDump(numValMap);\n"
-      "}\n"
-      "\n"
-      "proc unserialize(x: bytes) {\n"
-      "  if numValMap.isEmpty() then mapValues();\n"
-      "  messageLoad(x, numValMap);\n"
-      "}\n");
+    printer->Print("proc serialize(): bytes {\n");  
+    printer->Indent();
+    printer->Print("var s: bytes = b\"\";\n");  
+      
+    for (int i = 0; i < descriptor_->field_count(); i++) {
+      printer->Print(vars[i],
+        "messageFieldDump($field_name$, $field_number$, s);\n");
+    }
+    
+    printer->Print("return s;\n");
+    printer->Outdent();
+    printer->Print("}\n");
 
     printer->Print("\n");
-    printer->Print("proc mapValues() {\n");
+    printer->Print(
+      "proc unserialize(ref s: bytes) {\n"
+      "  while s.size > 0 {\n"
+      "    var (fieldNumber, val) = messageFieldLoad(s);\n"
+      "    select fieldNumber {\n");
+    printer->Indent();
+    printer->Indent();
     printer->Indent();
 
     for (int i = 0; i < descriptor_->field_count(); i++) {
-      const FieldDescriptor* fieldDescriptor = descriptor_->field(i);
-
-      printer->Print(
-        "numValMap.add($field_number$, c_ptrTo($field_name$));\n",
-        "field_number", StrCat(fieldDescriptor->number()),
-        "field_name", GetPropertyName(fieldDescriptor));
+      printer->Print(vars[i],
+        "when $field_number$ {\n"
+        "  $field_name$ = val:$field_type$;\n"
+        "}\n");
     }
 
     printer->Outdent();
     printer->Print("}\n");
-    
+    printer->Outdent();
+    printer->Print("}\n");
+    printer->Outdent();
+    printer->Print("}\n");
+
     printer->Print("\n");
     printer->Outdent();
     printer->Print("}\n");
