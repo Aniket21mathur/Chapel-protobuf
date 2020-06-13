@@ -3,4 +3,6 @@ syntax = "proto3";
 message Types {
   int64 age = 1;
   int32 year = 2;
+  
+  bool fun = 3;
 }

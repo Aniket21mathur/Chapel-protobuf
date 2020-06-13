@@ -12,4 +12,4 @@ messageObj.unserialize(byteStream);
 
 writeln(messageObj.age == -150);
 writeln(messageObj.year == 1000000);
-
+writeln(messageObj.fun == false);

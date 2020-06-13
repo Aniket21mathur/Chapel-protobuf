@@ -9,3 +9,9 @@ writeln(unsignedVarintLoad(b"\x00")(0) == 0);
 writeln(unsignedVarintLoad(b"\x03")(0) == 3);
 writeln(unsignedVarintLoad(b"\x8E\x02")(0) == 270);
 writeln(unsignedVarintLoad(b"\x9E\xA7\x05")(0) == 86942);
+
+writeln(boolDump(true) == b"\x01");
+writeln(boolDump(false) == b"\x00");
+
+writeln(boolLoad(b"\x01")(0) == true);
+writeln(boolLoad(b"\x00")(0) == false);

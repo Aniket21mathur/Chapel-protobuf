@@ -10,3 +10,8 @@ if messageObj.age != -150 or messageObj.year != 1000000:
     print("false")
 else:
     print("true")
+
+if messageObj.fun != False:
+    print("false")
+else:
+    print("true")

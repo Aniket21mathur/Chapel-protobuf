@@ -79,7 +79,7 @@ namespace chapel {
     printer->Print(
       "proc unserialize(ref s: bytes) {\n"
       "  while s.size > 0 {\n"
-      "    var (fieldNumber, val) = messageFieldLoad(s);\n"
+      "    var fieldNumber = getFieldNumber(s);\n"
       "    select fieldNumber {\n");
     printer->Indent();
     printer->Indent();
@@ -88,7 +88,7 @@ namespace chapel {
     for (int i = 0; i < descriptor_->field_count(); i++) {
       printer->Print(vars[i],
         "when $field_number$ {\n"
-        "  $field_name$ = val:$field_type$;\n"
+        "  $field_name$ = messageFieldLoad(s, $field_name$.type);\n"
         "}\n");
     }
 

@@ -37,31 +37,68 @@ module Protobuf {
     return (val, len);
   }
 
-  proc integerDump(val: int): bytes {
+  proc integerDump64(val: int(64)): bytes {
     var uintVal = val:uint;
     return unsignedVarintDump(uintVal);
   }
 
-  proc integerLoad(s: bytes): (int, int) {
+  proc integerLoad64(s: bytes): (int, int) {
     var (val, len) = unsignedVarintLoad(s);
-    return (val:int, len);
+    return (val:int(64), len);
+  }
+  
+  proc integerDump32(val: int(32)): bytes {
+    var uintVal = val:uint;
+    return unsignedVarintDump(uintVal);
+  }
+
+  proc integerLoad32(s: bytes): (int(32), int) {
+    var (val, len) = unsignedVarintLoad(s);
+    return (val:int(32), len);
+  }
+
+  proc boolDump(val: bool): bytes {
+    var uintVal = val:uint;
+    return unsignedVarintDump(uintVal);
+  }
+
+  proc boolLoad(s: bytes): (bool, int) {
+    var (val, len) = unsignedVarintLoad(s);
+    return (val:bool, len);
   }
 
   proc messageFieldDump(fieldVal, fieldNumber, ref s) {
     var wireType = 0;
-    var tagDump = integerDump((fieldNumber << 3) | wireType);
+    var tagDump = unsignedVarintDump(((fieldNumber << 3) | wireType):uint);
     s = s + tagDump;
     //ToDo Should be handled for generalized cases
-    s = s + integerDump(fieldVal);
+    if fieldVal.type == int(32) then
+      s = s + integerDump32(fieldVal);
+    else if fieldVal.type == int(64) then
+      s = s + integerDump64(fieldVal);
+    else if fieldVal.type == bool then
+      s = s + boolDump(fieldVal);
   }
 
-  proc messageFieldLoad(ref s:bytes) {
-      var (tag, tlen) = integerLoad(s);
-      var wireType = (tag & 0x7): int;
-      var fieldNumber = (tag >> 3): int;
-      var (val, vlen) = integerLoad(s[tlen..]);
-      s = s[tlen+vlen..];
-      return (fieldNumber, val);
+  proc getFieldNumber(ref s:bytes) {
+    var (tag, tlen) = unsignedVarintLoad(s);
+    var wireType = (tag & 0x7): int;
+    var fieldNumber = (tag >> 3): int;
+    s = s[tlen..];
+    return fieldNumber;
+  }  
+
+  proc messageFieldLoad(ref s:bytes, type t) {
+    var val:t, vlen:int;
+    if t == int(32) {
+      (val, vlen) = integerLoad32(s);
+    } else if t == int(64) {
+      (val, vlen) = integerLoad64(s);
+    } else if t == bool {
+      (val, vlen) = boolLoad(s);
+    }
+    s = s[vlen..];
+    return val;
   }
 
 }
