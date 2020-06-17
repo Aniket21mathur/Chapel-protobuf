@@ -13,6 +13,54 @@ writeln(unsignedVarintLoad(b"\x8E\x02")(0) == 270);
 writeln(unsignedVarintLoad(b"\x9E\xA7\x05")(0) == 86942);
 
 s = b"";
+uint64Dump(92233720368, 1, s);
+writeln(s == b"\x08\xB0\xC4\xBB\xCC\xD7\x02" );
+s = b"";
+uint64Dump(1, 1, s);
+writeln(s == b"\x08\x01");
+
+s = b"\xB0\xC4\xBB\xCC\xD7\x02";
+writeln(uint64Load(s) == 92233720368);
+s = b"\x01";
+writeln(uint64Load(s) == 1);
+
+s = b"";
+uint32Dump(4294967294, 1, s);
+writeln(s == b"\x08\xFE\xFF\xFF\xFF\x0F");
+s = b"";
+uint32Dump(1, 1, s);
+writeln(s == b"\x08\x01");
+
+s = b"\xFE\xFF\xFF\xFF\x0F";
+writeln(uint32Load(s) == 4294967294);
+s = b"\x01";
+writeln(uint32Load(s) == 1);
+
+s = b"";
+int64Dump(92233720368547758, 1, s);
+writeln(s == b"\x08\xAE\x8F\x85\xD7\xC7\xC2\xEB\xA3\x01");
+s = b"";
+int64Dump(1, 1, s);
+writeln(s == b"\x08\x01");
+
+s = b"\xAE\x8F\x85\xD7\xC7\xC2\xEB\xA3\x01";
+writeln(int64Load(s) ==  92233720368547758);
+s = b"\x01";
+writeln(int64Load(s) == 1);
+
+s = b"";
+int32Dump(2147483646, 1, s);
+writeln(s == b"\x08\xFE\xFF\xFF\xFF\x07");
+s = b"";
+int32Dump(1, 1, s);
+writeln(s == b"\x08\x01");
+
+s = b"\xFE\xFF\xFF\xFF\x07";
+writeln(int32Load(s) == 2147483646);
+s = b"\x01";
+writeln(int32Load(s) == 1);
+
+s = b"";
 boolDump(true, 1, s);
 writeln(s == b"\x08\x01");
 s = b"";
@@ -23,3 +71,27 @@ s = b"\x01";
 writeln(boolLoad(s) == true);
 s = b"\x00";
 writeln(boolLoad(s) == false);
+
+s = b"";
+sint32Dump(-214748364, 1, s);
+writeln(s ==  b"\x08\x97\xB3\xE6\xCC\x01");
+s = b"";
+sint32Dump(-1, 1, s);
+writeln(s == b"\x08\x01");
+
+s = b"\x97\xB3\xE6\xCC\x01";
+writeln(sint32Load(s) == -214748364);
+s = b"\x01";
+writeln(sint32Load(s) == -1);
+
+s = b"";
+sint64Dump(-9223372036854775, 1, s);
+writeln(s == b"\x08\xED\xCF\x9A\xDE\xF4\xA6\xE2 ");
+s = b"";
+sint64Dump(-2, 1, s);
+writeln(s == b"\x08\x03");
+
+s = b"\xED\xCF\x9A\xDE\xF4\xA6\xE2 ";
+writeln(sint64Load(s) == -9223372036854775);
+s = b"\x03";
+writeln(sint64Load(s) == -2);
