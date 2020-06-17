@@ -6,12 +6,22 @@ file = open("out", "rb")
 messageObj.ParseFromString(file.read())
 file.close()
 
-if messageObj.age != -150 or messageObj.year != 1000000:
+if messageObj.ui64 != 9223372036854 or messageObj.ui32 != 429496729:
     print("false")
 else:
     print("true")
 
-if messageObj.fun != False:
+if messageObj.i64 != -600000 or messageObj.i32 != 214748364:
+    print("false")
+else:
+    print("true")
+
+if messageObj.si64 != -675348989989 or messageObj.si32 != -214748364:
+    print("false")
+else:
+    print("true")
+
+if messageObj.bo != True:
     print("false")
 else:
     print("true")

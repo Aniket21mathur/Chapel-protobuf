@@ -1,8 +1,15 @@
 syntax = "proto3";
 
 message Types {
-  int64 age = 1;
-  int32 year = 2;
+  uint64 ui64 = 1;
+  uint32 ui32 = 2;
+
+  int64 i64 = 3;
+  int32 i32 = 4;
+
+  bool bo = 5;
   
-  bool fun = 3;
+  sint64 si64 = 6;
+  sint32 si32 = 7;
+
 }

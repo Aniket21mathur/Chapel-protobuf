@@ -41,6 +41,14 @@ namespace chapel {
         return "int(64)";
       case FieldDescriptor::TYPE_INT32:
         return "int(32)";
+      case FieldDescriptor::TYPE_UINT64:
+        return "uint(64)";
+      case FieldDescriptor::TYPE_UINT32:
+        return "uint(32)";
+      case FieldDescriptor::TYPE_SINT32:
+        return "int(32)";
+      case FieldDescriptor::TYPE_SINT64:
+        return "int(64)";
       case FieldDescriptor::TYPE_BOOL:
         return "bool";
       default:
@@ -55,6 +63,14 @@ namespace chapel {
         return "int64";
       case FieldDescriptor::TYPE_INT32:
         return "int32";
+      case FieldDescriptor::TYPE_UINT64:
+        return "uint64";
+      case FieldDescriptor::TYPE_UINT32:
+        return "uint32";
+      case FieldDescriptor::TYPE_SINT32:
+        return "sint32";
+      case FieldDescriptor::TYPE_SINT64:
+        return "sint64";
       case FieldDescriptor::TYPE_BOOL:
         return "bool";
       default:
@@ -68,6 +84,14 @@ namespace chapel {
       case FieldDescriptor::TYPE_INT64:
         return StrCat(descriptor->default_value_int64());
       case FieldDescriptor::TYPE_INT32:
+        return StrCat(descriptor->default_value_int32());
+      case FieldDescriptor::TYPE_UINT64:
+        return StrCat(descriptor->default_value_uint64());
+      case FieldDescriptor::TYPE_UINT32:
+        return StrCat(descriptor->default_value_uint32());
+      case FieldDescriptor::TYPE_SINT64:
+        return StrCat(descriptor->default_value_int64());
+      case FieldDescriptor::TYPE_SINT32:
         return StrCat(descriptor->default_value_int32());
         case FieldDescriptor::TYPE_BOOL:
           if (descriptor->default_value_bool()) {

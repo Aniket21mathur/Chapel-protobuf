@@ -46,6 +46,30 @@ module Protobuf {
     s = s + unsignedVarintDump(((fieldNumber << 3) | wireType):uint);
   }
 
+  proc uint64Dump(val: uint(64), fieldNumber, ref s: bytes) {
+    tagDump(fieldNumber, wireType, s);
+    var uintVal = val:uint;
+    s = s + unsignedVarintDump(uintVal);
+  }
+
+  proc uint64Load(ref s: bytes): uint(64) {
+    var (val, len) = unsignedVarintLoad(s);
+    s = s[len..];
+    return val:uint(64);
+  }
+
+  proc uint32Dump(val: uint(32), fieldNumber, ref s: bytes) {
+    tagDump(fieldNumber, wireType, s);
+    var uintVal = val:uint;
+    s = s + unsignedVarintDump(uintVal);
+  }
+
+  proc uint32Load(ref s: bytes): uint(32) {
+    var (val, len) = unsignedVarintLoad(s);
+    s = s[len..];
+    return val:uint(32);
+  }
+
   proc int64Dump(val: int(64), fieldNumber, ref s: bytes) {
     tagDump(fieldNumber, wireType, s);
     var uintVal = val:uint;
@@ -80,6 +104,30 @@ module Protobuf {
     var (val, len) = unsignedVarintLoad(s);
     s = s[len..];
     return val:bool;
+  }
+
+  proc sint64Dump(val: int(64), fieldNumber, ref s: bytes) {
+    tagDump(fieldNumber, wireType, s);
+    var uintVal = (val << 1):uint ^ (val >> 63):uint;
+    s = s + unsignedVarintDump(uintVal);
+  }
+
+  proc sint64Load(ref s: bytes): int(64) {
+    const (val, len) = unsignedVarintLoad(s);
+    s = s[len..];
+    return (val >> 1):int(64) ^ (val):int(64) << 63 >> 63;
+  }
+
+  proc sint32Dump(val: int(32), fieldNumber, ref s: bytes) {
+    tagDump(fieldNumber, wireType, s);
+    var uintVal = (val << 1):uint ^ (val >> 31):uint;
+    s = s + unsignedVarintDump(uintVal);
+  }
+
+  proc sint32Load(ref s: bytes): int(32) {
+    const (val, len) = unsignedVarintLoad(s);
+    s = s[len..];
+    return (val >> 1):int(32) ^ (val):int(32) << 31 >> 31;
   }
 
 }
