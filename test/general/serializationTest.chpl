@@ -95,3 +95,27 @@ s = b"\xED\xCF\x9A\xDE\xF4\xA6\xE2 ";
 writeln(sint64Load(s) == -9223372036854775);
 s = b"\x03";
 writeln(sint64Load(s) == -2);
+
+s = b"";
+bytesDump(b"testing", 1, s);
+writeln(s == b"\n\x07testing");
+s = b"";
+bytesDump(b"\x97\xB3\xE6\xCC\x01", 1, s);
+writeln(s == b"\n\x05\x97\xB3\xE6\xCC\x01");
+
+s = b"\x07testing";
+writeln(bytesLoad(s) == b"testing");
+s = b"\x05\x97\xB3\xE6\xCC\x01";
+writeln(bytesLoad(s) == b"\x97\xB3\xE6\xCC\x01");
+
+s = b"";
+stringDump("testing", 1, s);
+writeln(s == b"\n\x07testing");
+s = b"";
+stringDump("String with space", 1, s);
+writeln(s == b"\n\x11String with space");
+
+s = b"\x07testing";
+writeln(stringLoad(s) == "testing");
+s = b"\x11String with space";
+writeln(stringLoad(s) == "String with space");

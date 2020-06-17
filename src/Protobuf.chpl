@@ -2,7 +2,8 @@
 module Protobuf {
 
   // wireTypes
-  const wireType = 0;
+  const varint = 0;
+  const lengthDelimited = 2;
 
   proc unsignedVarintDump(val:uint): bytes {
     if val == 0 then
@@ -47,6 +48,7 @@ module Protobuf {
   }
 
   proc uint64Dump(val: uint(64), fieldNumber, ref s: bytes) {
+    const wireType = varint;
     tagDump(fieldNumber, wireType, s);
     var uintVal = val:uint;
     s = s + unsignedVarintDump(uintVal);
@@ -59,6 +61,7 @@ module Protobuf {
   }
 
   proc uint32Dump(val: uint(32), fieldNumber, ref s: bytes) {
+    const wireType = varint;
     tagDump(fieldNumber, wireType, s);
     var uintVal = val:uint;
     s = s + unsignedVarintDump(uintVal);
@@ -71,6 +74,7 @@ module Protobuf {
   }
 
   proc int64Dump(val: int(64), fieldNumber, ref s: bytes) {
+    const wireType = varint;
     tagDump(fieldNumber, wireType, s);
     var uintVal = val:uint;
     s = s + unsignedVarintDump(uintVal);
@@ -83,6 +87,7 @@ module Protobuf {
   }
 
   proc int32Dump(val: int(32), fieldNumber, ref s: bytes) {
+    const wireType = varint;
     tagDump(fieldNumber, wireType, s);
     var uintVal = val:uint;
     s = s + unsignedVarintDump(uintVal);
@@ -95,6 +100,7 @@ module Protobuf {
   }
 
   proc boolDump(val: bool, fieldNumber, ref s: bytes) {
+    const wireType = varint;
     tagDump(fieldNumber, wireType, s);
     var uintVal = val:uint;
     s = s + unsignedVarintDump(uintVal);
@@ -107,6 +113,7 @@ module Protobuf {
   }
 
   proc sint64Dump(val: int(64), fieldNumber, ref s: bytes) {
+    const wireType = varint;
     tagDump(fieldNumber, wireType, s);
     var uintVal = (val << 1):uint ^ (val >> 63):uint;
     s = s + unsignedVarintDump(uintVal);
@@ -119,6 +126,7 @@ module Protobuf {
   }
 
   proc sint32Dump(val: int(32), fieldNumber, ref s: bytes) {
+    const wireType = varint;
     tagDump(fieldNumber, wireType, s);
     var uintVal = (val << 1):uint ^ (val >> 31):uint;
     s = s + unsignedVarintDump(uintVal);
@@ -128,6 +136,27 @@ module Protobuf {
     const (val, len) = unsignedVarintLoad(s);
     s = s[len..];
     return (val >> 1):int(32) ^ (val):int(32) << 31 >> 31;
+  }
+
+  proc bytesDump(val: bytes, fieldNumber, ref s: bytes) {
+    const wireType = lengthDelimited;
+    tagDump(fieldNumber, wireType, s);
+    s =  s + unsignedVarintDump((val.size):uint) + val;
+  }
+
+  proc bytesLoad(ref s: bytes): bytes {
+    const (byteLen, len) = unsignedVarintLoad(s);
+    const byteVal = s[len..byteLen:int+len-1];
+    s = s[byteLen:int+len..];
+    return byteVal;
+  }
+
+  proc stringDump(val: string, fieldNumber, ref s: bytes) {
+    bytesDump(val.encode(), fieldNumber, s);
+  }
+
+  proc stringLoad(ref s: bytes): string throws {
+    return bytesLoad(s).decode();
   }
 
 }

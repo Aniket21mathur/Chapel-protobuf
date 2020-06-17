@@ -16,4 +16,8 @@ messageObj.bo = true;
 messageObj.si64 = -675348989989;
 messageObj.si32 = -214748364;
 
+messageObj.byt = b"\x97\xB3\xE6\xCC\x01";
+
+messageObj.st = "Protobuf implementation for chapel";
+
 writingChannel.write(messageObj.serialize());

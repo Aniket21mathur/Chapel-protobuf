@@ -13,6 +13,10 @@ messageObj.bo = True
 messageObj.si64 = -675348989989
 messageObj.si32 = -214748364
 
+messageObj.byt = b'\x97\xB3\xE6\xCC\x01';
+
+messageObj.st = "Protobuf implementation for chapel"
+
 file = open("out", "wb")
 file.write(messageObj.SerializeToString())
 file.close()

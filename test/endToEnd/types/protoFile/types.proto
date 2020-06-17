@@ -12,4 +12,7 @@ message Types {
   sint64 si64 = 6;
   sint32 si32 = 7;
 
+  bytes byt = 8;
+
+  string st = 9;
 }

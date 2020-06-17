@@ -25,3 +25,13 @@ if messageObj.bo != True:
     print("false")
 else:
     print("true")
+
+if messageObj.byt != b'\x97\xB3\xE6\xCC\x01':
+    print("false")
+else:
+    print("true")
+
+if messageObj.st != "Protobuf implementation for chapel":
+    print("false")
+else:
+    print("true")

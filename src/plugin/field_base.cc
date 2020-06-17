@@ -51,6 +51,10 @@ namespace chapel {
         return "int(64)";
       case FieldDescriptor::TYPE_BOOL:
         return "bool";
+      case FieldDescriptor::TYPE_BYTES:
+        return "bytes";
+      case FieldDescriptor::TYPE_STRING:
+        return "string";
       default:
         GOOGLE_LOG(FATAL)<< "Unknown field type.";
         return "";
@@ -73,6 +77,10 @@ namespace chapel {
         return "sint64";
       case FieldDescriptor::TYPE_BOOL:
         return "bool";
+      case FieldDescriptor::TYPE_BYTES:
+        return "bytes";
+      case FieldDescriptor::TYPE_STRING:
+        return "string";
       default:
         GOOGLE_LOG(FATAL)<< "Unknown field type.";
         return "";
@@ -93,12 +101,16 @@ namespace chapel {
         return StrCat(descriptor->default_value_int64());
       case FieldDescriptor::TYPE_SINT32:
         return StrCat(descriptor->default_value_int32());
-        case FieldDescriptor::TYPE_BOOL:
-          if (descriptor->default_value_bool()) {
-            return "true";
-          } else {
-            return "false";
-          }
+      case FieldDescriptor::TYPE_BYTES:
+        return "";
+      case FieldDescriptor::TYPE_STRING:
+        return "";
+      case FieldDescriptor::TYPE_BOOL:
+        if (descriptor->default_value_bool()) {
+          return "true";
+        } else {
+          return "false";
+        }
       default:
         GOOGLE_LOG(FATAL)<< "Unknown field type.";
         return "";
