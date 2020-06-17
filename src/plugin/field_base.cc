@@ -12,6 +12,7 @@ namespace chapel {
 
     (*variables)["property_name"] = property_name();
     (*variables)["type_name"] = type_name(descriptor_);
+    (*variables)["proto_type_name"] = proto_type_name(descriptor_);
     (*variables)["name"] = name();
     (*variables)["descriptor_name"] = descriptor_->name();
     (*variables)["default_value"] = default_value(descriptor_);
@@ -40,6 +41,20 @@ namespace chapel {
         return "int(64)";
       case FieldDescriptor::TYPE_INT32:
         return "int(32)";
+      case FieldDescriptor::TYPE_BOOL:
+        return "bool";
+      default:
+        GOOGLE_LOG(FATAL)<< "Unknown field type.";
+        return "";
+    }
+  }
+
+  string FieldGeneratorBase::proto_type_name(const FieldDescriptor* descriptor) {
+    switch (descriptor->type()) {
+      case FieldDescriptor::TYPE_INT64:
+        return "int64";
+      case FieldDescriptor::TYPE_INT32:
+        return "int32";
       case FieldDescriptor::TYPE_BOOL:
         return "bool";
       default:

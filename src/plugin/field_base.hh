@@ -22,6 +22,7 @@ namespace chapel {
     string property_name();
     string name();
     string type_name(const FieldDescriptor* descriptor);
+    string proto_type_name(const FieldDescriptor* descriptor);
     string default_value(const FieldDescriptor* descriptor);
     string number();
 

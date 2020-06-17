@@ -41,7 +41,7 @@ namespace chapel {
       
       vars[i]["field_name"] = GetPropertyName(fieldDescriptor);
       vars[i]["field_number"] = StrCat(fieldDescriptor->number());
-      vars[i]["field_type"] = field_obj->type_name(fieldDescriptor);
+      vars[i]["proto_field_type"] = field_obj->proto_type_name(fieldDescriptor);
     }
     
     printer->Print(
@@ -68,7 +68,7 @@ namespace chapel {
       
     for (int i = 0; i < descriptor_->field_count(); i++) {
       printer->Print(vars[i],
-        "messageFieldDump($field_name$, $field_number$, s);\n");
+        "$proto_field_type$Dump($field_name$, $field_number$, s);\n");
     }
     
     printer->Print("return s;\n");
@@ -79,7 +79,7 @@ namespace chapel {
     printer->Print(
       "proc unserialize(ref s: bytes) {\n"
       "  while s.size > 0 {\n"
-      "    var fieldNumber = getFieldNumber(s);\n"
+      "    var fieldNumber = tagLoad(s);\n"
       "    select fieldNumber {\n");
     printer->Indent();
     printer->Indent();
@@ -88,7 +88,7 @@ namespace chapel {
     for (int i = 0; i < descriptor_->field_count(); i++) {
       printer->Print(vars[i],
         "when $field_number$ {\n"
-        "  $field_name$ = messageFieldLoad(s, $field_name$.type);\n"
+        "  $field_name$ = $proto_field_type$Load(s);\n"
         "}\n");
     }
 

@@ -7,7 +7,7 @@ var file = open("out", iomode.r);
 var readingChannel = file.reader();
 
 var byteStream:bytes;
-readingChannel.read(byteStream);
+readingChannel.readbytes(byteStream);
 messageObj.unserialize(byteStream);
 
 writeln(messageObj.age == -150);

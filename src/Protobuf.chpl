@@ -2,10 +2,7 @@
 module Protobuf {
 
   // wireTypes
-  const Varint = 0;
-  const Bit64 = 1;
-  const LengthDelimited = 2;
-  const Bit32 = 5;
+  const wireType = 0;
 
   proc unsignedVarintDump(val:uint): bytes {
     if val == 0 then
@@ -37,68 +34,52 @@ module Protobuf {
     return (val, len);
   }
 
-  proc integerDump64(val: int(64)): bytes {
-    var uintVal = val:uint;
-    return unsignedVarintDump(uintVal);
-  }
-
-  proc integerLoad64(s: bytes): (int, int) {
-    var (val, len) = unsignedVarintLoad(s);
-    return (val:int(64), len);
-  }
-  
-  proc integerDump32(val: int(32)): bytes {
-    var uintVal = val:uint;
-    return unsignedVarintDump(uintVal);
-  }
-
-  proc integerLoad32(s: bytes): (int(32), int) {
-    var (val, len) = unsignedVarintLoad(s);
-    return (val:int(32), len);
-  }
-
-  proc boolDump(val: bool): bytes {
-    var uintVal = val:uint;
-    return unsignedVarintDump(uintVal);
-  }
-
-  proc boolLoad(s: bytes): (bool, int) {
-    var (val, len) = unsignedVarintLoad(s);
-    return (val:bool, len);
-  }
-
-  proc messageFieldDump(fieldVal, fieldNumber, ref s) {
-    var wireType = 0;
-    var tagDump = unsignedVarintDump(((fieldNumber << 3) | wireType):uint);
-    s = s + tagDump;
-    //ToDo Should be handled for generalized cases
-    if fieldVal.type == int(32) then
-      s = s + integerDump32(fieldVal);
-    else if fieldVal.type == int(64) then
-      s = s + integerDump64(fieldVal);
-    else if fieldVal.type == bool then
-      s = s + boolDump(fieldVal);
-  }
-
-  proc getFieldNumber(ref s:bytes) {
+  proc tagLoad(ref s:bytes) {
     var (tag, tlen) = unsignedVarintLoad(s);
     var wireType = (tag & 0x7): int;
     var fieldNumber = (tag >> 3): int;
     s = s[tlen..];
     return fieldNumber;
-  }  
+  }
 
-  proc messageFieldLoad(ref s:bytes, type t) {
-    var val:t, vlen:int;
-    if t == int(32) {
-      (val, vlen) = integerLoad32(s);
-    } else if t == int(64) {
-      (val, vlen) = integerLoad64(s);
-    } else if t == bool {
-      (val, vlen) = boolLoad(s);
-    }
-    s = s[vlen..];
-    return val;
+  proc tagDump(fieldNumber, wireType, ref s: bytes) {
+    s = s + unsignedVarintDump(((fieldNumber << 3) | wireType):uint);
+  }
+
+  proc int64Dump(val: int(64), fieldNumber, ref s: bytes) {
+    tagDump(fieldNumber, wireType, s);
+    var uintVal = val:uint;
+    s = s + unsignedVarintDump(uintVal);
+  }
+
+  proc int64Load(ref s: bytes): int {
+    var (val, len) = unsignedVarintLoad(s);
+    s = s[len..];
+    return val:int(64);
+  }
+
+  proc int32Dump(val: int(32), fieldNumber, ref s: bytes) {
+    tagDump(fieldNumber, wireType, s);
+    var uintVal = val:uint;
+    s = s + unsignedVarintDump(uintVal);
+  }
+
+  proc int32Load(ref s: bytes): int(32) {
+    var (val, len) = unsignedVarintLoad(s);
+    s = s[len..];
+    return val:int(32);
+  }
+
+  proc boolDump(val: bool, fieldNumber, ref s: bytes) {
+    tagDump(fieldNumber, wireType, s);
+    var uintVal = val:uint;
+    s = s + unsignedVarintDump(uintVal);
+  }
+
+  proc boolLoad(ref s: bytes): bool {
+    var (val, len) = unsignedVarintLoad(s);
+    s = s[len..];
+    return val:bool;
   }
 
 }
