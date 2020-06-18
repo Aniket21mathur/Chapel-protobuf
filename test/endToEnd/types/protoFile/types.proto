@@ -15,4 +15,7 @@ message Types {
   bytes byt = 8;
 
   string st = 9;
+
+  fixed32 fi32 = 10;
+  fixed64 fi64 = 11;
 }

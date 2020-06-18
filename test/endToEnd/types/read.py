@@ -35,3 +35,8 @@ if messageObj.st != "Protobuf implementation for chapel":
     print("false")
 else:
     print("true")
+
+if messageObj.fi64 != 100000000000 or messageObj.fi32 != 1000000:
+    print("false")
+else:
+    print("true")

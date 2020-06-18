@@ -4,6 +4,8 @@ module Protobuf {
   // wireTypes
   const varint = 0;
   const lengthDelimited = 2;
+  const fixed64Type = 1;
+  const fixed32Type = 5;
 
   proc unsignedVarintDump(val:uint): bytes {
     if val == 0 then
@@ -157,6 +159,46 @@ module Protobuf {
 
   proc stringLoad(ref s: bytes): string throws {
     return bytesLoad(s).decode();
+  }
+
+  proc fixed32Dump(val: uint(32), fieldNumber, ref s: bytes) {
+    const wireType = fixed32Type;
+    tagDump(fieldNumber, wireType, s);
+    for i in 0..24 by 8 {
+      var newByte = (val >> i):uint(8);
+      s = s + createBytesWithNewBuffer(c_ptrTo(newByte), 1);
+    }
+  }
+
+  proc fixed32Load(ref s: bytes): uint(32) {
+    var val: uint(32);
+    var shift = 0;
+    for i in 0..3 {
+      val = val | (s[i]: uint(32) << shift);
+      shift = shift + 8;
+    }
+    s = s[4..];
+    return val;
+  }
+
+  proc fixed64Dump(val: uint(64), fieldNumber, ref s: bytes) {
+    const wireType = fixed64Type;
+    tagDump(fieldNumber, wireType, s);
+    for i in 0..56 by 8 {
+      var newByte = (val >> i):uint(8);
+      s = s + createBytesWithNewBuffer(c_ptrTo(newByte), 1);
+    }
+  }
+
+  proc fixed64Load(ref s: bytes): uint(64) {
+    var val: uint(64);
+    var shift = 0;
+    for i in 0..7 {
+      val = val | (s[i]: uint(64) << shift);
+      shift = shift + 8;
+    }
+    s = s[8..];
+    return val;
   }
 
 }

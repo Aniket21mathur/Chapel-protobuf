@@ -119,3 +119,27 @@ s = b"\x07testing";
 writeln(stringLoad(s) == "testing");
 s = b"\x11String with space";
 writeln(stringLoad(s) == "String with space");
+
+s = b"";
+fixed32Dump(0, 1, s);
+writeln(s == b"\x0D\x00\x00\x00\x00");
+s = b"";
+fixed32Dump(300000, 1, s);
+writeln(s == b"\x0D\xE0\x93\x04\x00");
+
+s = b"\x00\x00\x00\x00";
+writeln(fixed32Load(s) == 0);
+s = b"\xE0\x93\x04\x00";
+writeln(fixed32Load(s) == 300000);
+
+s = b"";
+fixed64Dump(0, 1, s);
+writeln(s == b"\x09\x00\x00\x00\x00\x00\x00\x00\x00");
+s = b"";
+fixed64Dump(400000000000, 1, s);
+writeln(s == b"\x09\x00\xA0\xDB!]\x00\x00\x00");
+
+s = b"\x00\x00\x00\x00\x00\x00\x00\x00";
+writeln(fixed64Load(s) == 0);
+s = b"\x00\xA0\xDB!]\x00\x00\x00";
+writeln(fixed64Load(s) == 400000000000);

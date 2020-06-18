@@ -17,6 +17,9 @@ messageObj.byt = b'\x97\xB3\xE6\xCC\x01';
 
 messageObj.st = "Protobuf implementation for chapel"
 
+messageObj.fi32 = 1000000;
+messageObj.fi64 = 100000000000;
+
 file = open("out", "wb")
 file.write(messageObj.SerializeToString())
 file.close()

@@ -19,3 +19,5 @@ writeln(messageObj.si64 == -675348989989);
 writeln(messageObj.si32 == -214748364);
 writeln(messageObj.byt == b"\x97\xB3\xE6\xCC\x01");
 writeln(messageObj.st == "Protobuf implementation for chapel");
+writeln(messageObj.fi32 == 1000000);
+writeln(messageObj.fi64 == 100000000000);
