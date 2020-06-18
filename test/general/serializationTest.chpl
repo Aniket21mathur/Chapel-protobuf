@@ -143,3 +143,51 @@ s = b"\x00\x00\x00\x00\x00\x00\x00\x00";
 writeln(fixed64Load(s) == 0);
 s = b"\x00\xA0\xDB!]\x00\x00\x00";
 writeln(fixed64Load(s) == 400000000000);
+
+s = b"";
+floatDump(4.6789, 1, s);
+writeln(s == b"\x0D\x8C\xB9\x95@");
+s = b"";
+floatDump(4000.34, 1, s);
+writeln(s == b"\x0Dq\x05zE");
+
+s = b"\x8C\xB9\x95@";
+writeln(ceil(floatLoad(s)) == 5);
+s = b"q\x05zE";
+writeln(ceil(floatLoad(s)) == 4001);
+
+s = b"";
+doubleDump(4.578694, 1, s);
+writeln(s == b"\x09\xD1\x90\xF1(\x95P\x12@");
+s = b"";
+doubleDump(444444444444.23444, 1, s);
+writeln(s == b"\x09\x01\x0F\xC7\x01\xBD\xDEYB");
+
+s = b"\xD1\x90\xF1(\x95P\x12@";
+writeln(ceil(doubleLoad(s)) == 5);
+s = b"\x01\x0F\xC7\x01\xBD\xDEYB";
+writeln(ceil(doubleLoad(s)) == 444444444445);
+
+s = b"";
+sfixed32Dump(-23, 1, s);
+writeln(s == b"\x0D\xE9\xFF\xFF\xFF");
+s = b"";
+sfixed32Dump(-4000, 1, s);
+writeln(s == b"\x0D`\xF0\xFF\xFF");
+
+s = b"\xE9\xFF\xFF\xFF";
+writeln(sfixed32Load(s) == -23);
+s = b"`\xF0\xFF\xFF";
+writeln(sfixed32Load(s) == -4000);
+
+s = b"";
+sfixed64Dump(-78, 1, s);
+writeln(s == b"\x09\xB2\xFF\xFF\xFF\xFF\xFF\xFF\xFF");
+s = b"";
+sfixed64Dump(-400000000, 1, s);
+writeln(s == b"\x09\x00|(\xE8\xFF\xFF\xFF\xFF");
+
+s = b"\xB2\xFF\xFF\xFF\xFF\xFF\xFF\xFF";
+writeln(sfixed64Load(s) == -78);
+s = b"\x00|(\xE8\xFF\xFF\xFF\xFF";
+writeln(sfixed64Load(s) == -400000000);

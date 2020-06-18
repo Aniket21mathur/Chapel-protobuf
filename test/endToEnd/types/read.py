@@ -40,3 +40,13 @@ if messageObj.fi64 != 100000000000 or messageObj.fi32 != 1000000:
     print("false")
 else:
     print("true")
+
+if round(messageObj.fl, 2) != 444.23 or round(messageObj.db, 2) != 444444444444.23:
+    print("false")
+else:
+    print("true")
+
+if messageObj.sf64 != 6473899292 or messageObj.sf32 != -4567:
+    print("false")
+else:
+    print("true")

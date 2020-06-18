@@ -23,4 +23,10 @@ messageObj.st = "Protobuf implementation for chapel";
 messageObj.fi32 = 1000000;
 messageObj.fi64 = 100000000000;
 
+messageObj.fl = 444.23444;
+messageObj.db = 444444444444.23444;
+
+messageObj.sf32 = -4567;
+messageObj.sf64 = 6473899292;
+
 writingChannel.write(messageObj.serialize());

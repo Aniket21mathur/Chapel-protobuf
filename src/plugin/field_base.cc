@@ -59,6 +59,14 @@ namespace chapel {
         return "uint(64)";
       case FieldDescriptor::TYPE_FIXED32:
         return "uint(32)";
+      case FieldDescriptor::TYPE_FLOAT:
+        return "real(32)";
+      case FieldDescriptor::TYPE_DOUBLE:
+        return "real(64)";
+      case FieldDescriptor::TYPE_SFIXED32:
+        return "int(32)";
+      case FieldDescriptor::TYPE_SFIXED64:
+        return "int(64)";
       default:
         GOOGLE_LOG(FATAL)<< "Unknown field type.";
         return "";
@@ -89,6 +97,14 @@ namespace chapel {
         return "fixed64";
       case FieldDescriptor::TYPE_FIXED32:
         return "fixed32";
+      case FieldDescriptor::TYPE_FLOAT:
+        return "float";
+      case FieldDescriptor::TYPE_DOUBLE:
+        return "double";
+      case FieldDescriptor::TYPE_SFIXED32:
+        return "sfixed32";
+      case FieldDescriptor::TYPE_SFIXED64:
+        return "sfixed64";
       default:
         GOOGLE_LOG(FATAL)<< "Unknown field type.";
         return "";
@@ -123,6 +139,14 @@ namespace chapel {
         return StrCat(descriptor->default_value_uint64());
       case FieldDescriptor::TYPE_FIXED32:
         return StrCat(descriptor->default_value_uint32());
+      case FieldDescriptor::TYPE_FLOAT:
+        return StrCat(descriptor->default_value_float());
+      case FieldDescriptor::TYPE_DOUBLE:
+        return StrCat(descriptor->default_value_double());
+      case FieldDescriptor::TYPE_SFIXED32:
+        return StrCat(descriptor->default_value_int32());
+      case FieldDescriptor::TYPE_SFIXED64:
+        return StrCat(descriptor->default_value_int64());
       default:
         GOOGLE_LOG(FATAL)<< "Unknown field type.";
         return "";

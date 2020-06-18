@@ -1,6 +1,8 @@
 /* Documentation for protobuf */
 module Protobuf {
 
+  use SysCTypes;
+
   // wireTypes
   const varint = 0;
   const lengthDelimited = 2;
@@ -199,6 +201,62 @@ module Protobuf {
     }
     s = s[8..];
     return val;
+  }
+  
+  proc floatDump(val: real(32), fieldNumber, ref s: bytes) {
+    var a = val;
+    var b: uint(32);
+    c_memcpy(c_ptrTo(b), c_ptrTo(a), c_sizeof(b.type));
+    fixed32Dump(b, fieldNumber, s);
+  }
+  
+  proc floatLoad(ref s: bytes): real(32) {
+    var a = fixed32Load(s);
+    var b: real(32);
+    c_memcpy(c_ptrTo(b), c_ptrTo(a), c_sizeof(b.type));
+    return b;
+  }
+
+  proc doubleDump(val: real(64), fieldNumber, ref s: bytes) {
+    var a = val;
+    var b: uint(64);
+    c_memcpy(c_ptrTo(b), c_ptrTo(a), c_sizeof(b.type));
+    fixed64Dump(b, fieldNumber, s);
+  }
+  
+  proc doubleLoad(ref s: bytes): real(64) {
+    var a = fixed64Load(s);
+    var b: real(64);
+    c_memcpy(c_ptrTo(b), c_ptrTo(a), c_sizeof(b.type));
+    return b;
+  }
+
+  proc sfixed64Dump(val: int(64), fieldNumber, ref s: bytes) {
+    var a = val;
+    var b: uint(64);
+    c_memcpy(c_ptrTo(b), c_ptrTo(a), c_sizeof(b.type));
+    fixed64Dump(b, fieldNumber, s);
+  }
+
+  proc sfixed64Load(ref s: bytes): int(64) {
+    var a = fixed64Load(s);
+    var b: int(64);
+    c_memcpy(c_ptrTo(b), c_ptrTo(a), c_sizeof(b.type));
+    return b;
+  }
+
+  proc sfixed32Dump(val: int(32), fieldNumber, ref s: bytes) {
+    var a = val;
+    var b: uint(32);
+    c_memcpy(c_ptrTo(b), c_ptrTo(a), c_sizeof(b.type));
+    fixed32Dump(b, fieldNumber, s);
+  }
+
+  proc sfixed32Load(ref s: bytes): int(32) {
+    var a = fixed32Load(s);
+    var b: int(32);
+    c_memcpy(c_ptrTo(b), c_ptrTo(a), c_sizeof(b.type));
+    return b;
   }
 
 }

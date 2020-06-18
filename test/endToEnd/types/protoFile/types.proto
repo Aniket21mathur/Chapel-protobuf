@@ -18,4 +18,10 @@ message Types {
 
   fixed32 fi32 = 10;
   fixed64 fi64 = 11;
+  
+  float fl = 12;
+  double db = 13;
+  
+  sfixed32 sf32 = 14;
+  sfixed64 sf64 = 15;
 }
