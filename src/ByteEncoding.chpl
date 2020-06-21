@@ -1,5 +1,5 @@
-/* Documentation for protobuf */
-module Protobuf {
+/* Documentation for ByteEncoding */
+module ByteEncoding {
 
   use SysCTypes;
 

@@ -1,4 +1,4 @@
-use Protobuf;
+use ByteEncoding;
 
 var s:bytes;
 

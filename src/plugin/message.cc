@@ -62,24 +62,22 @@ namespace chapel {
       printer->Print("\n");
     }
 
-    printer->Print("proc serialize(): bytes {\n");  
-    printer->Indent();
-    printer->Print("var s: bytes = b\"\";\n");  
-      
+    printer->Print("proc serialize(ch) {\n");  
+    printer->Indent(); 
+
     for (int i = 0; i < descriptor_->field_count(); i++) {
       printer->Print(vars[i],
-        "$proto_field_type$Dump($field_name$, $field_number$, s);\n");
+        "$proto_field_type$Dump($field_name$, $field_number$, ch);\n");
     }
-    
-    printer->Print("return s;\n");
+
     printer->Outdent();
     printer->Print("}\n");
 
     printer->Print("\n");
     printer->Print(
-      "proc unserialize(ref s: bytes) {\n"
-      "  while s.size > 0 {\n"
-      "    var fieldNumber = tagLoad(s);\n"
+      "proc unserialize(ch) {\n"
+      "  while true {\n"
+      "    var fieldNumber = tagLoad(ch);\n"
       "    select fieldNumber {\n");
     printer->Indent();
     printer->Indent();
@@ -88,9 +86,14 @@ namespace chapel {
     for (int i = 0; i < descriptor_->field_count(); i++) {
       printer->Print(vars[i],
         "when $field_number$ {\n"
-        "  $field_name$ = $proto_field_type$Load(s);\n"
+        "  $field_name$ = $proto_field_type$Load(ch);\n"
         "}\n");
     }
+
+    printer->Print(
+      "when -1 {\n"
+      "  break;\n"
+      "}\n");
 
     printer->Outdent();
     printer->Print("}\n");
