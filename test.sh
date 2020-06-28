@@ -24,14 +24,14 @@ endToEnd() {
   echo "Running for $1"
 
   dir=test/endToEnd/$1
-  protoc --chpl_out=$dir $dir/protoFile/$1.proto
-  protoc -I=$dir/protoFile/ --python_out=$dir $dir/protoFile/$1.proto
+  protoc --chpl_out=$dir $dir/protoFile/$1.proto || exit 1
+  protoc -I=$dir/protoFile/ --python_out=$dir $dir/protoFile/$1.proto || exit 1
 
   #write from chapel and read from chapel
   echo "Chapel to chapel"
-  chpl -o $dir/write $dir/write.chpl
+  chpl -o $dir/write $dir/write.chpl || exit 1
   $dir/./write
-  chpl -o $dir/read $dir/read.chpl
+  chpl -o $dir/read $dir/read.chpl || exit 1
   OUTPUT="$($dir/./read)"
   rm -r $dir/write
   rm -r $dir/read
@@ -46,9 +46,9 @@ endToEnd() {
 
   #write from chapel and read from python
   echo "chapel to python"
-  chpl -o $dir/write $dir/write.chpl
+  chpl -o $dir/write $dir/write.chpl || exit 1
   $dir/./write
-  OUTPUT="$(python3 $dir/read.py)"
+  OUTPUT="$(python3 $dir/read.py)" || exit 1
   rm -r $dir/write
   rm -r out
   if echo $OUTPUT | grep -q 'false'; then
@@ -61,8 +61,8 @@ endToEnd() {
 
   #write from python and read from chapel
   echo "python to chapel"
-  python3 $dir/write.py
-  chpl -o $dir/read $dir/read.chpl
+  python3 $dir/write.py || exit 1
+  chpl -o $dir/read $dir/read.chpl || exit 1
   OUTPUT="$($dir/./read)"
   rm -r $dir/read
   rm -r out
