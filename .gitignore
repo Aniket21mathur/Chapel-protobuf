@@ -37,3 +37,6 @@ src/plugin/protoc-gen-chpl
 
 # IDEs
 .vscode
+
+# cache
+**/__pycache__/
