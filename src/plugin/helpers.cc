@@ -57,14 +57,23 @@ namespace chapel {
     return true;
   }
 
+  string GetPackageName(const FileDescriptor* descriptor) {
+    return UnderscoresToCamelCase(descriptor->package());
+  }
+
   string GetOutputFile(const FileDescriptor* descriptor, string* error) {
     bool valid_input_filename = ValidateInputFileName(descriptor);
     if (!valid_input_filename) {
       *error = "Input file should be a .proto file";
       return "";
     }
-    string relative_filename = GetFileNameBase(descriptor);
+
+    string package_name = GetPackageName(descriptor);
     string file_extension = ".chpl";
+    if (!package_name.empty()) {
+      return package_name + file_extension;
+    }
+    string relative_filename = GetFileNameBase(descriptor);
     return relative_filename + file_extension;
   }
   
