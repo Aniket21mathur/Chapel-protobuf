@@ -69,6 +69,9 @@ namespace chapel {
       "}\n"
       "\n");
 
+    printer->Print("var unknowFieldStream: bytes = \"\";\n");
+    printer->Print("\n");
+
     printer->Print("proc _writeToOutputFile(binCh) throws {\n");
     printer->Indent();
 
@@ -78,6 +81,7 @@ namespace chapel {
         "$proto_field_type$Append($field_name$, binCh);\n");
     }
 
+    printer->Print("binCh.write(unknowFieldStream);\n");
     printer->Outdent();
     printer->Print("}\n");
 
@@ -91,7 +95,7 @@ namespace chapel {
     printer->Print(
       "proc _parseFromInputFile(binCh) throws {\n"
       "  while true {\n"
-      "    var fieldNumber = tagConsume(binCh);\n"
+      "    var (fieldNumber, wireType) = tagConsume(binCh);\n"
       "    select fieldNumber {\n");
     printer->Indent();
     printer->Indent();
@@ -107,6 +111,9 @@ namespace chapel {
     printer->Print(
       "when -1 {\n"
       "  break;\n"
+      "}\n"
+      "otherwise {\n"
+      "  unknowFieldStream += unknowField(fieldNumber, wireType, binCh);\n"
       "}\n");
 
     printer->Outdent();

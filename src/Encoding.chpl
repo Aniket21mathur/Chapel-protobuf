@@ -47,10 +47,10 @@ module Encoding {
 
   proc tagConsume(ch: readingChannel) throws {
     var (tag, tlen) = unsignedVarintConsume(ch);
-    if tlen == -1 then return -1;
+    if tlen == -1 then return (-1, -1);
     var wireType = (tag & 0x7): int;
     var fieldNumber = (tag >> 3): int;
-    return fieldNumber;
+    return (fieldNumber, wireType);
   }
 
   proc tagAppend(fieldNumber: int, wireType: int, ch: writingChannel) throws {
@@ -233,6 +233,33 @@ module Encoding {
     var b: int(32);
     c_memcpy(c_ptrTo(b), c_ptrTo(a), c_sizeof(b.type));
     return b;
+  }
+
+  proc unknowField(fieldNumber, wireType, ch): bytes throws {
+    var s: bytes;
+    var tmpMem = openmem();
+    var memWriter = tmpMem.writer(kind=iokind.little, locking=false);
+    var memReader = tmpMem.reader(kind=iokind.little, locking=false);
+
+    tagAppend(fieldNumber, wireType, memWriter);
+    if wireType == varint {
+      var val = unsignedVarintConsume(ch)(0);
+      unsignedVarintAppend(val, memWriter);
+    } else if wireType == fixed64Type {
+      var val = fixed64Consume(ch);
+      fixed64Append(val, memWriter);
+    } else if wireType == lengthDelimited {
+      var val = bytesConsume(ch);
+      bytesAppend(val, memWriter);
+    } else if wireType == fixed32Type {
+      var val = fixed32Consume(ch);
+      fixed32Append(val, memWriter);
+    }
+
+    memWriter.close();
+    memReader.readbytes(s);
+    tmpMem.close();
+    return s;
   }
 
   proc writeToOutputFileHelper(ref message, ch) throws {
