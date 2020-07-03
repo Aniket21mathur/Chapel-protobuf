@@ -21,7 +21,7 @@ module Encoding {
       shiftVal = newVal >> 7;
       var k = if shiftVal != 0 then 0x80 else 0x00;
       var newByte = (newVal & 0x7F | k):uint(8);
-      ch.write(createBytesWithNewBuffer(c_ptrTo(newByte), 1));
+      ch.writeBytes(newByte, 1);
       newVal = shiftVal;
     }
   }
@@ -168,7 +168,7 @@ module Encoding {
     tagDump(fieldNumber, wireType, ch);
     for i in 0..24 by 8 {
       var newByte = (val >> i):uint(8);
-      ch.write(createBytesWithNewBuffer(c_ptrTo(newByte), 1));
+      ch.writeBytes(newByte, 1);
     }
   }
 
@@ -190,7 +190,7 @@ module Encoding {
     tagDump(fieldNumber, wireType, ch);
     for i in 0..56 by 8 {
       var newByte = (val >> i):uint(8);
-      ch.write(createBytesWithNewBuffer(c_ptrTo(newByte), 1));
+      ch.writeBytes(newByte, 1);
     }
   }
 
