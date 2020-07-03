@@ -33,8 +33,7 @@ module Encoding {
     var s:bytes;
     while true {
       s = b"";
-      ch.readbytes(s, 1);
-      if s == b"" then return (val, -1);
+      if !ch.readbytes(s, 1) then return (val, -1);
       val = val + ((s[0] & 0x7F): uint << shift);
       shift = shift + 7;
       len = len + 1;
