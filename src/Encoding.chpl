@@ -56,7 +56,6 @@ module Encoding {
   
   proc uint64Dump(val: uint(64), fieldNumber, ch) throws {
     const wireType = varint;
-    tagDump(fieldNumber, wireType, ch);
     var uintVal = val:uint;
     unsignedVarintDump(uintVal, ch);
   }
@@ -68,7 +67,6 @@ module Encoding {
 
   proc uint32Dump(val: uint(32), fieldNumber, ch) throws {
     const wireType = varint;
-    tagDump(fieldNumber, wireType, ch);
     var uintVal = val:uint;
     unsignedVarintDump(uintVal, ch);
   }
@@ -81,7 +79,6 @@ module Encoding {
 
   proc int64Dump(val: int(64), fieldNumber, ch) throws {
     const wireType = varint;
-    tagDump(fieldNumber, wireType, ch);
     var uintVal = val:uint;
     unsignedVarintDump(uintVal, ch);
   }
@@ -93,7 +90,6 @@ module Encoding {
 
   proc int32Dump(val: int(32), fieldNumber, ch) throws {
     const wireType = varint;
-    tagDump(fieldNumber, wireType, ch);
     var uintVal = val:uint;
     unsignedVarintDump(uintVal, ch);
   }
@@ -105,7 +101,6 @@ module Encoding {
 
   proc boolDump(val: bool, fieldNumber, ch) throws {
     const wireType = varint;
-    tagDump(fieldNumber, wireType, ch);
     var uintVal = val:uint;
     unsignedVarintDump(uintVal, ch);
   }
@@ -117,7 +112,6 @@ module Encoding {
 
   proc sint64Dump(val: int(64), fieldNumber, ch) throws {
     const wireType = varint;
-    tagDump(fieldNumber, wireType, ch);
     var uintVal = (val << 1):uint ^ (val >> 63):uint;
     unsignedVarintDump(uintVal, ch);
   }
@@ -129,7 +123,6 @@ module Encoding {
 
   proc sint32Dump(val: int(32), fieldNumber, ch) throws {
     const wireType = varint;
-    tagDump(fieldNumber, wireType, ch);
     var uintVal = (val << 1):uint ^ (val >> 31):uint;
     unsignedVarintDump(uintVal, ch);
   }
@@ -141,7 +134,6 @@ module Encoding {
 
   proc bytesDump(val: bytes, fieldNumber, ch) throws {
     const wireType = lengthDelimited;
-    tagDump(fieldNumber, wireType, ch);
     unsignedVarintDump((val.size):uint, ch);
     ch.write(val);
   }
@@ -164,7 +156,6 @@ module Encoding {
 
   proc fixed32Dump(val: uint(32), fieldNumber, ch) throws {
     const wireType = fixed32Type;
-    tagDump(fieldNumber, wireType, ch);
     for i in 0..24 by 8 {
       var newByte = (val >> i):uint(8);
       ch.writeBytes(newByte, 1);
@@ -186,7 +177,6 @@ module Encoding {
 
   proc fixed64Dump(val: uint(64), fieldNumber, ch) throws {
     const wireType = fixed64Type;
-    tagDump(fieldNumber, wireType, ch);
     for i in 0..56 by 8 {
       var newByte = (val >> i):uint(8);
       ch.writeBytes(newByte, 1);
@@ -205,7 +195,7 @@ module Encoding {
     }
     return val;
   }
-  
+
   proc floatDump(val: real(32), fieldNumber, ch) throws {
     var a = val;
     var b: uint(32);

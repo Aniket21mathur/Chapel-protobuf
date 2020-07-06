@@ -17,6 +17,7 @@ namespace chapel {
     (*variables)["descriptor_name"] = descriptor_->name();
     (*variables)["default_value"] = default_value(descriptor_);
     (*variables)["number"] = number();
+    (*variables)["wire_format"] = StrCat(WireFormat::WireTypeForField(descriptor_));
   }
 
   FieldGeneratorBase::FieldGeneratorBase(const FieldDescriptor* descriptor)

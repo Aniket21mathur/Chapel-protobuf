@@ -67,6 +67,7 @@ namespace chapel {
 
     for (int i = 0; i < descriptor_->field_count(); i++) {
       printer->Print(vars[i],
+        "tagDump($field_number$, WireFormat$field_name$, ch);\n"
         "$proto_field_type$Dump($field_name$, $field_number$, ch);\n");
     }
 

@@ -5,6 +5,7 @@
 
 #include <google/protobuf/descriptor.h>
 #include <google/protobuf/io/printer.h>
+#include <google/protobuf/wire_format.h>
 
 namespace chapel {
   
@@ -12,6 +13,7 @@ namespace chapel {
 
   using namespace google::protobuf;
   using namespace google::protobuf::io;
+  using namespace google::protobuf::internal;
 
   class FieldGeneratorBase {
    public:
