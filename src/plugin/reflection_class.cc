@@ -19,7 +19,9 @@ namespace chapel {
     printer->Print("\n");
     printer->Indent();
 
-    printer->Print("use Encoding;\n");
+    printer->Print(
+      "use Encoding;\n"
+      "use RepeatedFields;\n");
     printer->Print("\n");
 
     // write children: Messages

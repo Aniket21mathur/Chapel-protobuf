@@ -43,6 +43,7 @@ namespace chapel {
       vars[i]["field_number"] = StrCat(fieldDescriptor->number());
       vars[i]["proto_field_type"] = field_obj->proto_type_name(fieldDescriptor);
       vars[i]["wire_format"] = StrCat(WireFormat::WireTypeForField(fieldDescriptor));
+      vars[i]["is_repeated"] = StrCat(fieldDescriptor->is_repeated());
     }
     
     printer->Print(
@@ -77,8 +78,15 @@ namespace chapel {
 
     for (int i = 0; i < descriptor_->field_count(); i++) {
       printer->Print(vars[i],
-        "tagAppend($field_number$, $wire_format$, binCh);\n"
-        "$proto_field_type$Append($field_name$, binCh);\n");
+        "tagAppend($field_number$, $wire_format$, binCh);\n");
+
+        if(vars[i]["is_repeated"] == "0") {
+          printer->Print(vars[i],
+            "$proto_field_type$Append($field_name$, binCh);\n");
+        } else {
+          printer->Print(vars[i],
+            "$proto_field_type$RepeatedAppend($field_name$, binCh);\n");
+        }
     }
 
     printer->Print("binCh.write(unknownFieldStream);\n");
@@ -103,9 +111,17 @@ namespace chapel {
 
     for (int i = 0; i < descriptor_->field_count(); i++) {
       printer->Print(vars[i],
-        "when $field_number$ {\n"
-        "  $field_name$ = $proto_field_type$Consume(binCh);\n"
-        "}\n");
+        "when $field_number$ {\n");
+
+        if(vars[i]["is_repeated"] == "0") {
+          printer->Print(vars[i],
+            "  $field_name$ = $proto_field_type$Consume(binCh);\n");
+        } else {
+          printer->Print(vars[i],
+            "  $field_name$ = $proto_field_type$RepeatedConsume(binCh);\n");
+        }
+
+        printer->Print("}\n");
     }
 
     printer->Print(
