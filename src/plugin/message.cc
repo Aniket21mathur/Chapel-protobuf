@@ -42,6 +42,7 @@ namespace chapel {
       vars[i]["field_name"] = GetPropertyName(fieldDescriptor);
       vars[i]["field_number"] = StrCat(fieldDescriptor->number());
       vars[i]["proto_field_type"] = field_obj->proto_type_name(fieldDescriptor);
+      vars[i]["wire_format"] = StrCat(WireFormat::WireTypeForField(fieldDescriptor));
     }
     
     printer->Print(
@@ -67,7 +68,7 @@ namespace chapel {
 
     for (int i = 0; i < descriptor_->field_count(); i++) {
       printer->Print(vars[i],
-        "tagDump($field_number$, WireFormat$field_name$, ch);\n"
+        "tagDump($field_number$, $wire_format$, ch);\n"
         "$proto_field_type$Dump($field_name$, $field_number$, ch);\n");
     }
 

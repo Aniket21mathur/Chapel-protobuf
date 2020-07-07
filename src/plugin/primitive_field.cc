@@ -13,7 +13,6 @@ namespace chapel {
     printer->Print(
       variables_,
       "var $property_name$: $type_name$;\n"
-      "var WireFormat$property_name$ = $wire_format$;\n"
       "proc $name$ { return $property_name$; }\n"
       "proc ref $name$ ref { return $property_name$; }\n"
     );
