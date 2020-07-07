@@ -63,7 +63,7 @@ namespace chapel {
       printer->Print("\n");
     }
 
-    printer->Print("proc serialize(ch) {\n");  
+    printer->Print("proc writeToOutputFile(ch) {\n");
     printer->Indent(); 
 
     for (int i = 0; i < descriptor_->field_count(); i++) {
@@ -77,7 +77,7 @@ namespace chapel {
 
     printer->Print("\n");
     printer->Print(
-      "proc unserialize(ch) {\n"
+      "proc parseFromInputFile(ch) {\n"
       "  while true {\n"
       "    var fieldNumber = tagLoad(ch);\n"
       "    select fieldNumber {\n");
