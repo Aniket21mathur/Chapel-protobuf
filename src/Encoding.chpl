@@ -120,7 +120,7 @@ module Encoding {
     return (val >> 1):int(64) ^ (val):int(64) << 63 >> 63;
   }
 
-  proc sint32Append(val: int(32), ch: channel(true,iokind.little,false)) throws {
+  proc sint32Append(val: int(64), ch: channel(true,iokind.little,false)) throws {
     const wireType = varint;
     var uintVal = (val << 1):uint ^ (val >> 31):uint;
     unsignedVarintAppend(uintVal, ch);
