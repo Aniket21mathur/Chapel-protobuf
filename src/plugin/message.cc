@@ -77,7 +77,7 @@ namespace chapel {
     for (int i = 0; i < descriptor_->field_count(); i++) {
       printer->Print(vars[i],
         "tagAppend($field_number$, $wire_format$, binCh);\n"
-        "$proto_field_type$Append($field_name$, $field_number$, binCh);\n");
+        "$proto_field_type$Append($field_name$, binCh);\n");
     }
 
     printer->Outdent();
