@@ -21,7 +21,7 @@ module Encoding {
       shiftVal = newVal >> 7;
       var k = if shiftVal != 0 then 0x80 else 0x00;
       var newByte = (newVal & 0x7F | k):uint(8);
-      ch.writeBytes(newByte, 1);
+      ch.write(newByte);
       newVal = shiftVal;
     }
   }
@@ -30,14 +30,13 @@ module Encoding {
     var shift = 0;
     var val:uint;
     var len = 0;
-    var s:bytes;
+    var s:uint(8);
     while true {
-      s = b"";
-      if !ch.readbytes(s, 1) then return (val, -1);
-      val = val + ((s[0] & 0x7F): uint << shift);
+      if !ch.read(s) then return (val, -1);
+      val = val + ((s & 0x7F): uint << shift);
       shift = shift + 7;
       len = len + 1;
-      if (s[0] & 0x80) == 0 then break;
+      if (s & 0x80) == 0 then break;
     }
     return (val, len);
   }

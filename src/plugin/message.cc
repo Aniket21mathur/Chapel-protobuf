@@ -65,11 +65,19 @@ namespace chapel {
 
     printer->Print("proc writeToOutputFile(ch) {\n");
     printer->Indent(); 
+    
+    printer->Print(
+      "var binCh = new channel(writing=true, iokind.little, locking=false,\n"
+      "                        home=ch.home,\n"
+      "                        _channel_internal= ch._channel_internal,\n"
+      "                        _readWriteThisFromLocale=here);\n"
+      "defer { binCh._channel_internal = QIO_CHANNEL_PTR_NULL; }\n"
+      "\n");
 
     for (int i = 0; i < descriptor_->field_count(); i++) {
       printer->Print(vars[i],
-        "tagAppend($field_number$, $wire_format$, ch);\n"
-        "$proto_field_type$Append($field_name$, $field_number$, ch);\n");
+        "tagAppend($field_number$, $wire_format$, binCh);\n"
+        "$proto_field_type$Append($field_name$, $field_number$, binCh);\n");
     }
 
     printer->Outdent();
@@ -78,8 +86,14 @@ namespace chapel {
     printer->Print("\n");
     printer->Print(
       "proc parseFromInputFile(ch) {\n"
+      "var binCh = new channel(writing=false, iokind.little, locking=false,\n"
+      "                        home=ch.home,\n"
+      "                        _channel_internal= ch._channel_internal,\n"
+      "                        _readWriteThisFromLocale=here);\n"
+      "defer { binCh._channel_internal = QIO_CHANNEL_PTR_NULL; }\n"
+      "\n"
       "  while true {\n"
-      "    var fieldNumber = tagConsume(ch);\n"
+      "    var fieldNumber = tagConsume(binCh);\n"
       "    select fieldNumber {\n");
     printer->Indent();
     printer->Indent();
@@ -88,7 +102,7 @@ namespace chapel {
     for (int i = 0; i < descriptor_->field_count(); i++) {
       printer->Print(vars[i],
         "when $field_number$ {\n"
-        "  $field_name$ = $proto_field_type$Consume(ch);\n"
+        "  $field_name$ = $proto_field_type$Consume(binCh);\n"
         "}\n");
     }
 
