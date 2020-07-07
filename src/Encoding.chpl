@@ -1,7 +1,6 @@
 /* Documentation for Encoding */
 module Encoding {
 
-  use SysCTypes;
   use IO;
 
   // wireTypes

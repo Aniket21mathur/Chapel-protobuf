@@ -15,7 +15,6 @@ namespace chapel {
     (*variables)["proto_type_name"] = proto_type_name(descriptor_);
     (*variables)["name"] = name();
     (*variables)["descriptor_name"] = descriptor_->name();
-    (*variables)["default_value"] = default_value(descriptor_);
     (*variables)["number"] = number();
   }
 
@@ -105,48 +104,6 @@ namespace chapel {
         return "sfixed32";
       case FieldDescriptor::TYPE_SFIXED64:
         return "sfixed64";
-      default:
-        GOOGLE_LOG(FATAL)<< "Unknown field type.";
-        return "";
-    }
-  }
-
-  string FieldGeneratorBase::default_value(const FieldDescriptor* descriptor) {
-    switch (descriptor->type()) {
-      case FieldDescriptor::TYPE_INT64:
-        return StrCat(descriptor->default_value_int64());
-      case FieldDescriptor::TYPE_INT32:
-        return StrCat(descriptor->default_value_int32());
-      case FieldDescriptor::TYPE_UINT64:
-        return StrCat(descriptor->default_value_uint64());
-      case FieldDescriptor::TYPE_UINT32:
-        return StrCat(descriptor->default_value_uint32());
-      case FieldDescriptor::TYPE_SINT64:
-        return StrCat(descriptor->default_value_int64());
-      case FieldDescriptor::TYPE_SINT32:
-        return StrCat(descriptor->default_value_int32());
-      case FieldDescriptor::TYPE_BYTES:
-        return "";
-      case FieldDescriptor::TYPE_STRING:
-        return "";
-      case FieldDescriptor::TYPE_BOOL:
-        if (descriptor->default_value_bool()) {
-          return "true";
-        } else {
-          return "false";
-        }
-      case FieldDescriptor::TYPE_FIXED64:
-        return StrCat(descriptor->default_value_uint64());
-      case FieldDescriptor::TYPE_FIXED32:
-        return StrCat(descriptor->default_value_uint32());
-      case FieldDescriptor::TYPE_FLOAT:
-        return StrCat(descriptor->default_value_float());
-      case FieldDescriptor::TYPE_DOUBLE:
-        return StrCat(descriptor->default_value_double());
-      case FieldDescriptor::TYPE_SFIXED32:
-        return StrCat(descriptor->default_value_int32());
-      case FieldDescriptor::TYPE_SFIXED64:
-        return StrCat(descriptor->default_value_int64());
       default:
         GOOGLE_LOG(FATAL)<< "Unknown field type.";
         return "";

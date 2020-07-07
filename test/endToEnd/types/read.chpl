@@ -1,6 +1,5 @@
 use types;
 use IO;
-use Math;
 
 var messageObj = new Types();
 var file = open("out", iomode.r);
