@@ -68,8 +68,8 @@ namespace chapel {
 
     for (int i = 0; i < descriptor_->field_count(); i++) {
       printer->Print(vars[i],
-        "tagDump($field_number$, $wire_format$, ch);\n"
-        "$proto_field_type$Dump($field_name$, $field_number$, ch);\n");
+        "tagAppend($field_number$, $wire_format$, ch);\n"
+        "$proto_field_type$Append($field_name$, $field_number$, ch);\n");
     }
 
     printer->Outdent();
@@ -79,7 +79,7 @@ namespace chapel {
     printer->Print(
       "proc parseFromInputFile(ch) {\n"
       "  while true {\n"
-      "    var fieldNumber = tagLoad(ch);\n"
+      "    var fieldNumber = tagConsume(ch);\n"
       "    select fieldNumber {\n");
     printer->Indent();
     printer->Indent();
@@ -88,7 +88,7 @@ namespace chapel {
     for (int i = 0; i < descriptor_->field_count(); i++) {
       printer->Print(vars[i],
         "when $field_number$ {\n"
-        "  $field_name$ = $proto_field_type$Load(ch);\n"
+        "  $field_name$ = $proto_field_type$Consume(ch);\n"
         "}\n");
     }
 
