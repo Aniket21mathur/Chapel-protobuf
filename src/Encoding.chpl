@@ -159,41 +159,23 @@ module Encoding {
 
   proc fixed32Append(val: uint(32), ch: writingChannel) throws {
     const wireType = fixed32Type;
-    for i in 0..24 by 8 {
-      var newByte = (val >> i):uint(8);
-      ch.write(newByte);
-    }
+    ch.write(val);
   }
 
   proc fixed32Consume(ch: readingChannel): uint(32) throws {
     var val: uint(32);
-    var shift = 0;
-    var s: uint(8);
-    for i in 0..3 {
-      ch.read(s);
-      val = val | (s: uint(32) << shift);
-      shift = shift + 8;
-    }
+    ch.read(val);
     return val;
   }
 
   proc fixed64Append(val: uint(64), ch: writingChannel) throws {
     const wireType = fixed64Type;
-    for i in 0..56 by 8 {
-      var newByte = (val >> i):uint(8);
-      ch.write(newByte);
-    }
+    ch.write(val);
   }
 
   proc fixed64Consume(ch: readingChannel): uint(64) throws {
     var val: uint(64);
-    var shift = 0;
-    var s: uint(8);
-    for i in 0..7 {
-      ch.read(s);
-      val = val | (s: uint(64) << shift);
-      shift = shift + 8;
-    }
+    ch.read(val);
     return val;
   }
 
@@ -251,6 +233,16 @@ module Encoding {
     var b: int(32);
     c_memcpy(c_ptrTo(b), c_ptrTo(a), c_sizeof(b.type));
     return b;
+  }
+
+  proc writeToOutputFileHelper(ref message, ch) {
+    var binCh: channel(writing=true, kind=iokind.little, locking=false) = ch;
+    message._writeToOutputFile(binCh);
+  }
+
+  proc parseFromInputFileHelper(ref message, ch) {
+    var binCh: channel(writing=false, kind=iokind.little, locking=false) = ch;
+    message._parseFromInputFile(binCh);
   }
 
 }

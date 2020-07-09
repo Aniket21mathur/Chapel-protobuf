@@ -62,17 +62,15 @@ namespace chapel {
       generator->GenerateMembers(printer);
       printer->Print("\n");
     }
-
-    printer->Print("proc writeToOutputFile(ch) {\n");
-    printer->Indent(); 
     
     printer->Print(
-      "var binCh = new channel(writing=true, iokind.little, locking=false,\n"
-      "                        home=ch.home,\n"
-      "                        _channel_internal= ch._channel_internal,\n"
-      "                        _readWriteThisFromLocale=here);\n"
-      "defer { binCh._channel_internal = QIO_CHANNEL_PTR_NULL; }\n"
+      "proc writeToOutputFile(ch) {\n"
+      "  writeToOutputFileHelper(this, ch);\n"
+      "}\n"
       "\n");
+
+    printer->Print("proc _writeToOutputFile(binCh) {\n");
+    printer->Indent();
 
     for (int i = 0; i < descriptor_->field_count(); i++) {
       printer->Print(vars[i],
@@ -86,12 +84,12 @@ namespace chapel {
     printer->Print("\n");
     printer->Print(
       "proc parseFromInputFile(ch) {\n"
-      "var binCh = new channel(writing=false, iokind.little, locking=false,\n"
-      "                        home=ch.home,\n"
-      "                        _channel_internal= ch._channel_internal,\n"
-      "                        _readWriteThisFromLocale=here);\n"
-      "defer { binCh._channel_internal = QIO_CHANNEL_PTR_NULL; }\n"
-      "\n"
+      "  parseFromInputFileHelper(this, ch);\n"
+      "}\n"
+      "\n");
+
+    printer->Print(
+      "proc _parseFromInputFile(binCh) {\n"
       "  while true {\n"
       "    var fieldNumber = tagConsume(binCh);\n"
       "    select fieldNumber {\n");

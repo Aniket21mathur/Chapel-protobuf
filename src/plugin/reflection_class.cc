@@ -32,9 +32,6 @@ namespace chapel {
       "*/\n"
       "\n"
       "use Encoding;\n"
-      "use IO;\n"
-      "\n"
-      "private extern const QIO_CHANNEL_PTR_NULL:qio_channel_ptr_t;\n"
       "\n",
       "file_name", file_->name());
   }
