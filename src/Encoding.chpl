@@ -235,12 +235,16 @@ module Encoding {
     return b;
   }
 
-  proc writeToOutputFileHelper(ref message, ch) {
+  proc writeToOutputFileHelper(ref message, ch) throws {
+    ch.lock();
+    defer { ch.unlock(); }
     var binCh: channel(writing=true, kind=iokind.little, locking=false) = ch;
     message._writeToOutputFile(binCh);
   }
 
-  proc parseFromInputFileHelper(ref message, ch) {
+  proc parseFromInputFileHelper(ref message, ch) throws {
+    ch.lock();
+    defer { ch.unlock(); }
     var binCh: channel(writing=false, kind=iokind.little, locking=false) = ch;
     message._parseFromInputFile(binCh);
   }

@@ -64,12 +64,12 @@ namespace chapel {
     }
     
     printer->Print(
-      "proc writeToOutputFile(ch) {\n"
+      "proc writeToOutputFile(ch) throws {\n"
       "  writeToOutputFileHelper(this, ch);\n"
       "}\n"
       "\n");
 
-    printer->Print("proc _writeToOutputFile(binCh) {\n");
+    printer->Print("proc _writeToOutputFile(binCh) throws {\n");
     printer->Indent();
 
     for (int i = 0; i < descriptor_->field_count(); i++) {
@@ -83,13 +83,13 @@ namespace chapel {
 
     printer->Print("\n");
     printer->Print(
-      "proc parseFromInputFile(ch) {\n"
+      "proc parseFromInputFile(ch) throws {\n"
       "  parseFromInputFileHelper(this, ch);\n"
       "}\n"
       "\n");
 
     printer->Print(
-      "proc _parseFromInputFile(binCh) {\n"
+      "proc _parseFromInputFile(binCh) throws {\n"
       "  while true {\n"
       "    var fieldNumber = tagConsume(binCh);\n"
       "    select fieldNumber {\n");
