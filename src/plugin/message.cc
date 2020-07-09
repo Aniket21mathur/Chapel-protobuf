@@ -41,7 +41,8 @@ namespace chapel {
       
       vars[i]["field_name"] = GetPropertyName(fieldDescriptor);
       vars[i]["field_number"] = StrCat(fieldDescriptor->number());
-      vars[i]["field_type"] = field_obj->type_name(fieldDescriptor);
+      vars[i]["proto_field_type"] = field_obj->proto_type_name(fieldDescriptor);
+      vars[i]["wire_format"] = StrCat(WireFormat::WireTypeForField(fieldDescriptor));
     }
     
     printer->Print(
@@ -61,25 +62,36 @@ namespace chapel {
       generator->GenerateMembers(printer);
       printer->Print("\n");
     }
+    
+    printer->Print(
+      "proc writeToOutputFile(ch) throws {\n"
+      "  writeToOutputFileHelper(this, ch);\n"
+      "}\n"
+      "\n");
 
-    printer->Print("proc serialize(): bytes {\n");  
+    printer->Print("proc _writeToOutputFile(binCh) throws {\n");
     printer->Indent();
-    printer->Print("var s: bytes = b\"\";\n");  
-      
+
     for (int i = 0; i < descriptor_->field_count(); i++) {
       printer->Print(vars[i],
-        "messageFieldDump($field_name$, $field_number$, s);\n");
+        "tagAppend($field_number$, $wire_format$, binCh);\n"
+        "$proto_field_type$Append($field_name$, binCh);\n");
     }
-    
-    printer->Print("return s;\n");
+
     printer->Outdent();
     printer->Print("}\n");
 
     printer->Print("\n");
     printer->Print(
-      "proc unserialize(ref s: bytes) {\n"
-      "  while s.size > 0 {\n"
-      "    var (fieldNumber, val) = messageFieldLoad(s);\n"
+      "proc parseFromInputFile(ch) throws {\n"
+      "  parseFromInputFileHelper(this, ch);\n"
+      "}\n"
+      "\n");
+
+    printer->Print(
+      "proc _parseFromInputFile(binCh) throws {\n"
+      "  while true {\n"
+      "    var fieldNumber = tagConsume(binCh);\n"
       "    select fieldNumber {\n");
     printer->Indent();
     printer->Indent();
@@ -88,9 +100,14 @@ namespace chapel {
     for (int i = 0; i < descriptor_->field_count(); i++) {
       printer->Print(vars[i],
         "when $field_number$ {\n"
-        "  $field_name$ = val:$field_type$;\n"
+        "  $field_name$ = $proto_field_type$Consume(binCh);\n"
         "}\n");
     }
+
+    printer->Print(
+      "when -1 {\n"
+      "  break;\n"
+      "}\n");
 
     printer->Outdent();
     printer->Print("}\n");

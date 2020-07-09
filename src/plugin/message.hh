@@ -6,6 +6,7 @@
 
 #include <google/protobuf/compiler/code_generator.h>
 #include <google/protobuf/io/printer.h>
+#include <google/protobuf/wire_format.h>
 
 namespace chapel {
 

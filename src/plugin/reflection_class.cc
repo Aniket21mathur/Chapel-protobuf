@@ -31,7 +31,7 @@ namespace chapel {
       "   source: $file_name$\n"
       "*/\n"
       "\n"
-      "use Protobuf;\n"
+      "use Encoding;\n"
       "\n",
       "file_name", file_->name());
   }
