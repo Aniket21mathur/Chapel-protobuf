@@ -23,8 +23,7 @@ namespace chapel {
    private:
     const FileDescriptor* file_;
 
-    string package_name;
-    string default_file_name;
+    string module_name;
 
     void WriteIntroduction(Printer* printer);
   };

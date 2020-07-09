@@ -6,9 +6,7 @@ namespace chapel {
 
   ReflectionClassGenerator::ReflectionClassGenerator(const FileDescriptor* file)
       : file_(file) {
-    package_name = GetPackageName(file);
-    default_file_name = GetFileNameBase(file);
-
+    module_name = GetModuleName(file);
   }
 
   ReflectionClassGenerator::~ReflectionClassGenerator() {
@@ -17,20 +15,12 @@ namespace chapel {
   void ReflectionClassGenerator::Generate(Printer* printer) {
     WriteIntroduction(printer);
 
-    string module_name;
-    if (!package_name.empty()) {
-      module_name = package_name;
-    } else {
-      module_name = default_file_name;
-    }
-
     printer->Print("module $module_name$ {\n", "module_name", module_name);
     printer->Print("\n");
     printer->Indent();
 
-    printer->Print(
-      "use Encoding;\n"
-      "\n");
+    printer->Print("use Encoding;\n");
+    printer->Print("\n");
 
     // write children: Messages
     if (file_->message_type_count() > 0) {
