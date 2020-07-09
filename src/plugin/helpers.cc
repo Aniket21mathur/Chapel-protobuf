@@ -61,22 +61,28 @@ namespace chapel {
     return UnderscoresToCamelCase(descriptor->package());
   }
 
+  string GetModuleName(const FileDescriptor* descriptor) {
+    string package_name = GetPackageName(descriptor);
+    if (!package_name.empty()) {
+      return package_name;
+    }
+    string proto_filename = GetFileNameBase(descriptor);
+    return proto_filename;
+  }
+
   string GetOutputFile(const FileDescriptor* descriptor, string* error) {
+    string file_extension = ".chpl";
+
     bool valid_input_filename = ValidateInputFileName(descriptor);
     if (!valid_input_filename) {
       *error = "Input file should be a .proto file";
       return "";
     }
 
-    string package_name = GetPackageName(descriptor);
-    string file_extension = ".chpl";
-    if (!package_name.empty()) {
-      return package_name + file_extension;
-    }
-    string relative_filename = GetFileNameBase(descriptor);
-    return relative_filename + file_extension;
+    string base_filename = GetModuleName(descriptor);
+    return base_filename + file_extension;
   }
-  
+
   string GetFieldName(const FieldDescriptor* descriptor) {
       return descriptor->name();
   }
