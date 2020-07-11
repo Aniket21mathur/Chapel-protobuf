@@ -5,7 +5,10 @@ module RepeatedFields {
   use List;
   use IO;
 
-  proc uint64RepeatedAppend(valList, ch: channel(true,iokind.little,false)) throws {
+  proc uint64RepeatedAppend(valList, fieldNumber, ch: writingChannel) throws {
+    if valList.isEmpty() then return;
+
+    tagAppend(fieldNumber, lengthDelimited, ch);
     var initialOffset = ch.offset();
     ch.mark();
     for val in valList {
@@ -19,7 +22,7 @@ module RepeatedFields {
     }
   }
 
-  proc uint64RepeatedConsume(ch: channel(false,iokind.little,false)) throws {
+  proc uint64RepeatedConsume(ch: readingChannel) throws {
     var (payloadLength, _) = unsignedVarintConsume(ch);
     var initialOffset = ch.offset();
 
@@ -32,7 +35,10 @@ module RepeatedFields {
     return returnList;
   }
 
-  proc uint32RepeatedAppend(valList, ch: channel(true,iokind.little,false)) throws {
+  proc uint32RepeatedAppend(valList, fieldNumber, ch: writingChannel) throws {
+    if valList.isEmpty() then return;
+
+    tagAppend(fieldNumber, lengthDelimited, ch);
     var initialOffset = ch.offset();
     ch.mark();
     for val in valList {
@@ -46,7 +52,7 @@ module RepeatedFields {
     }
   }
   
-  proc uint32RepeatedConsume(ch: channel(false,iokind.little,false)) throws {
+  proc uint32RepeatedConsume(ch: readingChannel) throws {
     var (payloadLength, _) = unsignedVarintConsume(ch);
     var initialOffset = ch.offset();
 
@@ -59,7 +65,10 @@ module RepeatedFields {
     return returnList; 
   }
   
-  proc int64RepeatedAppend(valList, ch: channel(true,iokind.little,false)) throws {
+  proc int64RepeatedAppend(valList, fieldNumber, ch: writingChannel) throws {
+    if valList.isEmpty() then return;
+
+    tagAppend(fieldNumber, lengthDelimited, ch);
     var initialOffset = ch.offset();
     ch.mark();
     for val in valList {
@@ -73,7 +82,7 @@ module RepeatedFields {
     }
   }
   
-  proc int64RepeatedConsume(ch: channel(false,iokind.little,false)) throws {
+  proc int64RepeatedConsume(ch: readingChannel) throws {
     var (payloadLength, _) = unsignedVarintConsume(ch);
     var initialOffset = ch.offset();
 
@@ -86,7 +95,10 @@ module RepeatedFields {
     return returnList; 
   }
   
-  proc int32RepeatedAppend(valList, ch: channel(true,iokind.little,false)) throws {
+  proc int32RepeatedAppend(valList, fieldNumber, ch: writingChannel) throws {
+    if valList.isEmpty() then return;
+
+    tagAppend(fieldNumber, lengthDelimited, ch);
     var initialOffset = ch.offset();
     ch.mark();
     for val in valList {
@@ -100,7 +112,7 @@ module RepeatedFields {
     }
   }
   
-  proc int32RepeatedConsume(ch: channel(false,iokind.little,false)) throws {
+  proc int32RepeatedConsume(ch: readingChannel) throws {
     var (payloadLength, _) = unsignedVarintConsume(ch);
     var initialOffset = ch.offset();
 
@@ -113,7 +125,10 @@ module RepeatedFields {
     return returnList; 
   }
   
-  proc boolRepeatedAppend(valList, ch: channel(true,iokind.little,false)) throws {
+  proc boolRepeatedAppend(valList, fieldNumber, ch: writingChannel) throws {
+    if valList.isEmpty() then return;
+
+    tagAppend(fieldNumber, lengthDelimited, ch);
     var payloadLength = valList.size; 
     unsignedVarintAppend(payloadLength:uint, ch);
     for val in valList {
@@ -121,7 +136,7 @@ module RepeatedFields {
     }
   }
 
-  proc boolRepeatedConsume(ch: channel(false,iokind.little,false)) throws {
+  proc boolRepeatedConsume(ch: readingChannel) throws {
     var (payloadLength, _) = unsignedVarintConsume(ch);
     var initialOffset = ch.offset();
 
@@ -134,7 +149,10 @@ module RepeatedFields {
     return returnList; 
   }
   
-  proc sint64RepeatedAppend(valList, ch: channel(true,iokind.little,false)) throws {
+  proc sint64RepeatedAppend(valList, fieldNumber, ch: writingChannel) throws {
+    if valList.isEmpty() then return;
+
+    tagAppend(fieldNumber, lengthDelimited, ch);
     var initialOffset = ch.offset();
     ch.mark();
     for val in valList {
@@ -148,7 +166,7 @@ module RepeatedFields {
     }
   }
   
-  proc sint64RepeatedConsume(ch: channel(false,iokind.little,false)) throws {
+  proc sint64RepeatedConsume(ch: readingChannel) throws {
     var (payloadLength, _) = unsignedVarintConsume(ch);
     var initialOffset = ch.offset();
 
@@ -161,7 +179,10 @@ module RepeatedFields {
     return returnList; 
   }
   
-  proc sint32RepeatedAppend(valList, ch: channel(true,iokind.little,false)) throws {
+  proc sint32RepeatedAppend(valList, fieldNumber, ch: writingChannel) throws {
+    if valList.isEmpty() then return;
+
+    tagAppend(fieldNumber, lengthDelimited, ch);
     var initialOffset = ch.offset();
     ch.mark();
     for val in valList {
@@ -175,7 +196,7 @@ module RepeatedFields {
     }
   }
   
-  proc sint32RepeatedConsume(ch: channel(false,iokind.little,false)) throws {
+  proc sint32RepeatedConsume(ch: readingChannel) throws {
     var (payloadLength, _) = unsignedVarintConsume(ch);
     var initialOffset = ch.offset();
 
@@ -188,7 +209,40 @@ module RepeatedFields {
     return returnList; 
   }
   
-  proc fixed32RepeatedAppend(valList, ch: channel(true,iokind.little,false)) throws {
+  proc bytesRepeatedAppend(valList, fieldNumber, ch: writingChannel) throws {
+    if valList.isEmpty() then return;
+    for val in valList {
+      tagAppend(fieldNumber, lengthDelimited, ch);
+      bytesAppend(val, ch);
+    }
+  }
+
+  proc bytesRepeatedConsume(ch: readingChannel) throws {
+    var returnList = new list(bytes);
+    var val = bytesConsume(ch);
+    returnList.append(val);
+    return returnList;
+  }
+
+  proc stringRepeatedAppend(valList, fieldNumber, ch: writingChannel) throws {
+    if valList.isEmpty() then return;
+    for val in valList {
+      tagAppend(fieldNumber, lengthDelimited, ch);
+      stringAppend(val, ch);
+    }
+  }
+
+  proc stringRepeatedConsume(ch: readingChannel) throws {
+    var returnList = new list(string);
+    var val = stringConsume(ch);
+    returnList.append(val);
+    return returnList;
+  }
+
+  proc fixed32RepeatedAppend(valList, fieldNumber, ch: writingChannel) throws {
+    if valList.isEmpty() then return;
+
+    tagAppend(fieldNumber, lengthDelimited, ch);
     var payloadLength = valList.size * 4; 
     unsignedVarintAppend(payloadLength:uint, ch);
     for val in valList {
@@ -196,7 +250,7 @@ module RepeatedFields {
     }
   }
 
-  proc fixed32RepeatedConsume(ch: channel(false,iokind.little,false)) throws {
+  proc fixed32RepeatedConsume(ch: readingChannel) throws {
     var (payloadLength, _) = unsignedVarintConsume(ch);
     var initialOffset = ch.offset();
 
@@ -209,7 +263,10 @@ module RepeatedFields {
     return returnList; 
   }
   
-  proc fixed64RepeatedAppend(valList, ch: channel(true,iokind.little,false)) throws {
+  proc fixed64RepeatedAppend(valList, fieldNumber, ch: writingChannel) throws {
+    if valList.isEmpty() then return;
+
+    tagAppend(fieldNumber, lengthDelimited, ch);
     var payloadLength = valList.size * 8; 
     unsignedVarintAppend(payloadLength:uint, ch);
     for val in valList {
@@ -217,7 +274,7 @@ module RepeatedFields {
     }
   }
 
-  proc fixed64RepeatedConsume(ch: channel(false,iokind.little,false)) throws {
+  proc fixed64RepeatedConsume(ch: readingChannel) throws {
     var (payloadLength, _) = unsignedVarintConsume(ch);
     var initialOffset = ch.offset();
 
@@ -230,7 +287,10 @@ module RepeatedFields {
     return returnList; 
   }
 
-  proc floatRepeatedAppend(valList, ch: channel(true,iokind.little,false)) throws {
+  proc floatRepeatedAppend(valList, fieldNumber, ch: writingChannel) throws {
+    if valList.isEmpty() then return;
+
+    tagAppend(fieldNumber, lengthDelimited, ch);
     var payloadLength = valList.size * 4; 
     unsignedVarintAppend(payloadLength:uint, ch);
     for val in valList {
@@ -238,7 +298,7 @@ module RepeatedFields {
     }
   }
 
-  proc floatRepeatedConsume(ch: channel(false,iokind.little,false)) throws {
+  proc floatRepeatedConsume(ch: readingChannel) throws {
     var (payloadLength, _) = unsignedVarintConsume(ch);
     var initialOffset = ch.offset();
 
@@ -251,7 +311,10 @@ module RepeatedFields {
     return returnList; 
   }
   
-  proc doubleRepeatedAppend(valList, ch: channel(true,iokind.little,false)) throws {
+  proc doubleRepeatedAppend(valList, fieldNumber, ch: writingChannel) throws {
+    if valList.isEmpty() then return;
+
+    tagAppend(fieldNumber, lengthDelimited, ch);
     var payloadLength = valList.size * 8; 
     unsignedVarintAppend(payloadLength:uint, ch);
     for val in valList {
@@ -259,7 +322,7 @@ module RepeatedFields {
     }
   }
 
-  proc doubleRepeatedConsume(ch: channel(false,iokind.little,false)) throws {
+  proc doubleRepeatedConsume(ch: readingChannel) throws {
     var (payloadLength, _) = unsignedVarintConsume(ch);
     var initialOffset = ch.offset();
 
@@ -272,7 +335,10 @@ module RepeatedFields {
     return returnList; 
   }
   
-  proc sfixed64RepeatedAppend(valList, ch: channel(true,iokind.little,false)) throws {
+  proc sfixed64RepeatedAppend(valList, fieldNumber, ch: writingChannel) throws {
+    if valList.isEmpty() then return;
+
+    tagAppend(fieldNumber, lengthDelimited, ch);
     var payloadLength = valList.size * 8; 
     unsignedVarintAppend(payloadLength:uint, ch);
     for val in valList {
@@ -280,7 +346,7 @@ module RepeatedFields {
     }
   }
 
-  proc sfixed64RepeatedConsume(ch: channel(false,iokind.little,false)) throws {
+  proc sfixed64RepeatedConsume(ch: readingChannel) throws {
     var (payloadLength, _) = unsignedVarintConsume(ch);
     var initialOffset = ch.offset();
 
@@ -293,7 +359,10 @@ module RepeatedFields {
     return returnList; 
   }
   
-  proc sfixed32RepeatedAppend(valList, ch: channel(true,iokind.little,false)) throws {
+  proc sfixed32RepeatedAppend(valList, fieldNumber, ch: writingChannel) throws {
+    if valList.isEmpty() then return;
+
+    tagAppend(fieldNumber, lengthDelimited, ch);
     var payloadLength = valList.size * 4; 
     unsignedVarintAppend(payloadLength:uint, ch);
     for val in valList {
@@ -301,7 +370,7 @@ module RepeatedFields {
     }
   }
 
-  proc sfixed32RepeatedConsume(ch: channel(false,iokind.little,false)) throws {
+  proc sfixed32RepeatedConsume(ch: readingChannel) throws {
     var (payloadLength, _) = unsignedVarintConsume(ch);
     var initialOffset = ch.offset();
 

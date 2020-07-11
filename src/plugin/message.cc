@@ -77,15 +77,13 @@ namespace chapel {
     printer->Indent();
 
     for (int i = 0; i < descriptor_->field_count(); i++) {
-      printer->Print(vars[i],
-        "tagAppend($field_number$, $wire_format$, binCh);\n");
-
         if(vars[i]["is_repeated"] == "0") {
           printer->Print(vars[i],
+            "tagAppend($field_number$, $wire_format$, binCh);\n"
             "$proto_field_type$Append($field_name$, binCh);\n");
         } else {
           printer->Print(vars[i],
-            "$proto_field_type$RepeatedAppend($field_name$, binCh);\n");
+            "$proto_field_type$RepeatedAppend($field_name$, $field_number$, binCh);\n");
         }
     }
 
@@ -118,7 +116,7 @@ namespace chapel {
             "  $field_name$ = $proto_field_type$Consume(binCh);\n");
         } else {
           printer->Print(vars[i],
-            "  $field_name$ = $proto_field_type$RepeatedConsume(binCh);\n");
+            "$field_name$.extend($proto_field_type$RepeatedConsume(binCh));\n");
         }
 
         printer->Print("}\n");

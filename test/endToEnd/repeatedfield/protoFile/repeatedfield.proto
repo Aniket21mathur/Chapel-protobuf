@@ -14,4 +14,6 @@ message repeatedField {
   repeated double db = 12;
   repeated sfixed32 sfi32 = 13;
   repeated sfixed64 sfi64 = 14;
+  repeated bytes byt = 15;
+  repeated string st = 16;
 }

@@ -53,7 +53,6 @@ lst9.append(500);
 lst9.append(2445489000);
 writeln(messageObj.fi64 == lst9);
 
-
 var lst10 = new list(real(32));
 lst10.append(4.12);
 lst10.append(4500.3);
@@ -73,3 +72,13 @@ var lst13 = new list(int(64));
 lst13.append(-45);
 lst13.append(-4500000000);
 writeln(messageObj.sfi64 == lst13);
+
+var lst14 = new list(bytes);
+lst14.append(b"\x01\x87\x76");
+lst14.append(b"\x00\x01\x02\x03");
+writeln(messageObj.byt == lst14);
+
+var lst15 = new list(string);
+lst15.append("aniket");
+lst15.append("String with spaces");
+writeln(messageObj.st == lst15);

@@ -110,3 +110,19 @@ if messageObj.sfi64 != lst:
     print("false")
 else:
     print("true")
+    
+lst = []
+lst.append(b"\x01\x87\x76")
+lst.append(b"\x00\x01\x02\x03")
+if messageObj.byt != lst:
+    print("false")
+else:
+    print("true")
+    
+lst = []
+lst.append("aniket")
+lst.append("String with spaces")
+if messageObj.st != lst:
+    print("false")
+else:
+    print("true")

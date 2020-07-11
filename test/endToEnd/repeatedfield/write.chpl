@@ -33,7 +33,6 @@ messageObj.fi32.append(8907);
 messageObj.fi64.append(500);
 messageObj.fi64.append(2445489000);
 
-
 messageObj.fl.append(4.12);
 messageObj.fl.append(4500.3);
 
@@ -45,5 +44,11 @@ messageObj.sfi32.append(-244548);
 
 messageObj.sfi64.append(-45);
 messageObj.sfi64.append(-4500000000);
+
+messageObj.byt.append(b"\x01\x87\x76");
+messageObj.byt.append(b"\x00\x01\x02\x03");
+
+messageObj.st.append("aniket");
+messageObj.st.append("String with spaces");
 
 messageObj.writeToOutputFile(writingChannel);

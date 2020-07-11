@@ -21,7 +21,8 @@ namespace chapel {
 
     printer->Print(
       "use Encoding;\n"
-      "use RepeatedFields;\n");
+      "use RepeatedFields;\n"
+      "use List;\n");
     printer->Print("\n");
 
     // write children: Messages

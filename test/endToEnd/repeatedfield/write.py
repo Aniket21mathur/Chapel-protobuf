@@ -41,6 +41,12 @@ messageObj.sfi32.append(-244548)
 messageObj.sfi64.append(-45)
 messageObj.sfi64.append(-4500000000)
 
+messageObj.byt.append(b'\x01\x87\x76')
+messageObj.byt.append(b'\x00\x01\x02\x03')
+
+messageObj.st.append("aniket")
+messageObj.st.append("String with spaces")
+
 file = open("out", "wb")
 file.write(messageObj.SerializeToString())
 file.close()
