@@ -26,7 +26,7 @@ module RepeatedFields {
     var (payloadLength, _) = unsignedVarintConsume(ch);
     var initialOffset = ch.offset();
 
-    var returnList = new list(uint(64));
+    var returnList: list(uint(64));
     while true {
       if (ch.offset() - initialOffset) == payloadLength then break;
       var val = uint64Consume(ch);
@@ -56,7 +56,7 @@ module RepeatedFields {
     var (payloadLength, _) = unsignedVarintConsume(ch);
     var initialOffset = ch.offset();
 
-    var returnList = new list(uint(32));
+    var returnList: list(uint(32));
     while true {
       if (ch.offset() - initialOffset) == payloadLength then break;
       var val = uint32Consume(ch);
@@ -86,7 +86,7 @@ module RepeatedFields {
     var (payloadLength, _) = unsignedVarintConsume(ch);
     var initialOffset = ch.offset();
 
-    var returnList = new list(int(64));
+    var returnList: list(int(64));
     while true {
       if (ch.offset() - initialOffset) == payloadLength then break;
       var val = int64Consume(ch);
@@ -116,7 +116,7 @@ module RepeatedFields {
     var (payloadLength, _) = unsignedVarintConsume(ch);
     var initialOffset = ch.offset();
 
-    var returnList = new list(int(32));
+    var returnList: list(int(32));
     while true {
       if (ch.offset() - initialOffset) == payloadLength then break;
       var val = int32Consume(ch);
@@ -140,7 +140,7 @@ module RepeatedFields {
     var (payloadLength, _) = unsignedVarintConsume(ch);
     var initialOffset = ch.offset();
 
-    var returnList = new list(bool);
+    var returnList: list(bool);
     while true {
       if (ch.offset() - initialOffset) == payloadLength then break;
       var val = boolConsume(ch);
@@ -170,7 +170,7 @@ module RepeatedFields {
     var (payloadLength, _) = unsignedVarintConsume(ch);
     var initialOffset = ch.offset();
 
-    var returnList = new list(int(64));
+    var returnList: list(int(64));
     while true {
       if (ch.offset() - initialOffset) == payloadLength then break;
       var val = sint64Consume(ch);
@@ -200,7 +200,7 @@ module RepeatedFields {
     var (payloadLength, _) = unsignedVarintConsume(ch);
     var initialOffset = ch.offset();
 
-    var returnList = new list(int(32));
+    var returnList: list(int(32));
     while true {
       if (ch.offset() - initialOffset) == payloadLength then break;
       var val = sint32Consume(ch);
@@ -218,7 +218,7 @@ module RepeatedFields {
   }
 
   proc bytesRepeatedConsume(ch: readingChannel) throws {
-    var returnList = new list(bytes);
+    var returnList: list(bytes);
     var val = bytesConsume(ch);
     returnList.append(val);
     return returnList;
@@ -233,7 +233,7 @@ module RepeatedFields {
   }
 
   proc stringRepeatedConsume(ch: readingChannel) throws {
-    var returnList = new list(string);
+    var returnList: list(string);
     var val = stringConsume(ch);
     returnList.append(val);
     return returnList;
@@ -254,7 +254,7 @@ module RepeatedFields {
     var (payloadLength, _) = unsignedVarintConsume(ch);
     var initialOffset = ch.offset();
 
-    var returnList = new list(uint(32));
+    var returnList: list(uint(32));
     while true {
       if (ch.offset() - initialOffset) == payloadLength then break;
       var val = fixed32Consume(ch);
@@ -278,7 +278,7 @@ module RepeatedFields {
     var (payloadLength, _) = unsignedVarintConsume(ch);
     var initialOffset = ch.offset();
 
-    var returnList = new list(uint(64));
+    var returnList: list(uint(64));
     while true {
       if (ch.offset() - initialOffset) == payloadLength then break;
       var val = fixed64Consume(ch);
@@ -302,7 +302,7 @@ module RepeatedFields {
     var (payloadLength, _) = unsignedVarintConsume(ch);
     var initialOffset = ch.offset();
 
-    var returnList = new list(real(32));
+    var returnList: list(real(32));
     while true {
       if (ch.offset() - initialOffset) == payloadLength then break;
       var val = floatConsume(ch);
@@ -326,7 +326,7 @@ module RepeatedFields {
     var (payloadLength, _) = unsignedVarintConsume(ch);
     var initialOffset = ch.offset();
 
-    var returnList = new list(real(64));
+    var returnList: list(real(64));
     while true {
       if (ch.offset() - initialOffset) == payloadLength then break;
       var val = doubleConsume(ch);
@@ -350,7 +350,7 @@ module RepeatedFields {
     var (payloadLength, _) = unsignedVarintConsume(ch);
     var initialOffset = ch.offset();
 
-    var returnList = new list(int(64));
+    var returnList: list(int(64));
     while true {
       if (ch.offset() - initialOffset) == payloadLength then break;
       var val = sfixed64Consume(ch);
@@ -374,7 +374,7 @@ module RepeatedFields {
     var (payloadLength, _) = unsignedVarintConsume(ch);
     var initialOffset = ch.offset();
 
-    var returnList = new list(int(32));
+    var returnList: list(int(32));
     while true {
       if (ch.offset() - initialOffset) == payloadLength then break;
       var val = sfixed32Consume(ch);
