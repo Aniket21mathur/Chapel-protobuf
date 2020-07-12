@@ -23,7 +23,9 @@ original Protocol Buffers library and is necessary to generate bindings from
 is not built. Use the `generate`_ shell script to build and install the Chapel
 library and code generator.
 
-``source ./generate.sh -p /desired/path/``
+.. code-block:: console
+
+  source ./generate.sh -p /desired/path/
 
 After Installation, the code generator can be used to generate bindings from 
 ``.proto`` schema files to get started.
@@ -72,7 +74,9 @@ with the ``--chpl_out`` flag, to invoke the Chapel code generator and write the
 output ``chpl`` file to a specific location.
 location:
 
-``protoc --chpl_out=$DST_DIR $SRC_DIR/addressbook.proto``
+.. code-block:: console
+
+  protoc --chpl_out=$DST_DIR $SRC_DIR/addressbook.proto
 
 This generates ``addressbook.chpl`` in your specified directory.
 
