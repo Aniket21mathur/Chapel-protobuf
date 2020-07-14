@@ -13,39 +13,23 @@ namespace chapel {
     return proto_file.substr(0, lastindex);
   }
 
-  string UnderscoresToCamelCase(const string& input) {
+  string InvalidCharsToUnderscores(const string& input) {
     string result;
-    bool cap_next_letter = false;
     for (int i = 0; i < input.size(); i++) {
-      if ('a' <= input[i] && input[i] <= 'z') {
-        if (cap_next_letter) {
-          result += input[i] + ('A' - 'a');
-        } else {
-          result += input[i];
-        }
-        cap_next_letter = false;
-      } else if ('A' <= input[i] && input[i] <= 'Z') {
-        if (cap_next_letter) {
-          result += input[i];
-        } else {
-          result += input[i] + ('a' - 'A');
-        }
-        cap_next_letter = false;
-      } else if ('0' <= input[i] && input[i] <= '9') {
+      if ( isalnum(input[i]) || input[i] == '_') {
         result += input[i];
-        cap_next_letter = true;
       } else {
-        cap_next_letter = true;
+        result += '_';
       }
     }
     return result;
   }
-  
+
   string GetFileNameBase(const FileDescriptor* descriptor) {
       string proto_file = descriptor->name();
       int lastslash = proto_file.find_last_of("/");
       string base = proto_file.substr(lastslash + 1);
-      return UnderscoresToCamelCase(StripDotProto(base));
+      return InvalidCharsToUnderscores(StripDotProto(base));
   }
 
   bool ValidateInputFileName(const FileDescriptor* descriptor) {
@@ -57,23 +41,38 @@ namespace chapel {
     return true;
   }
 
+  string GetPackageName(const FileDescriptor* descriptor) {
+    return InvalidCharsToUnderscores(descriptor->package());
+  }
+
+  string GetModuleName(const FileDescriptor* descriptor) {
+    string package_name = GetPackageName(descriptor);
+    if (!package_name.empty()) {
+      return package_name;
+    }
+    string proto_filename = GetFileNameBase(descriptor);
+    return proto_filename;
+  }
+
   string GetOutputFile(const FileDescriptor* descriptor, string* error) {
+    string file_extension = ".chpl";
+
     bool valid_input_filename = ValidateInputFileName(descriptor);
     if (!valid_input_filename) {
       *error = "Input file should be a .proto file";
       return "";
     }
-    string relative_filename = GetFileNameBase(descriptor);
-    string file_extension = ".chpl";
-    return relative_filename + file_extension;
+
+    string base_filename = GetModuleName(descriptor);
+    return base_filename + file_extension;
   }
-  
+
   string GetFieldName(const FieldDescriptor* descriptor) {
       return descriptor->name();
   }
 
   string GetPropertyName(const FieldDescriptor* descriptor) {
-    string property_name = UnderscoresToCamelCase(GetFieldName(descriptor));
+    string property_name = GetFieldName(descriptor);
     property_name += "_";
     return property_name;
   }

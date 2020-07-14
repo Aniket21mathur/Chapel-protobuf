@@ -31,7 +31,7 @@ namespace chapel {
   }
 
   string FieldGeneratorBase::name() {
-    return UnderscoresToCamelCase(GetFieldName(descriptor_));
+    return GetFieldName(descriptor_);
   }
 
   string FieldGeneratorBase::type_name(const FieldDescriptor* descriptor) {

@@ -14,8 +14,6 @@ namespace chapel {
   using namespace google::protobuf::compiler;
 
   class FieldGeneratorBase;
-  
-  string UnderscoresToCamelCase(const string& input);
 
   string GetOutputFile(const FileDescriptor* descriptor, string*error);
   
@@ -24,6 +22,8 @@ namespace chapel {
   string GetPropertyName(const FieldDescriptor* descriptor);
 
   FieldGeneratorBase* CreateFieldGenerator(const FieldDescriptor* descriptor);
+
+  string GetModuleName(const FileDescriptor* descriptor);
 
 } // namespace chapel
 
