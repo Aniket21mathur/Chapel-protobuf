@@ -13,39 +13,23 @@ namespace chapel {
     return proto_file.substr(0, lastindex);
   }
 
-  string UnderscoresToCamelCase(const string& input) {
+  string InvalidCharsToUnderscores(const string& input) {
     string result;
-    bool cap_next_letter = false;
     for (int i = 0; i < input.size(); i++) {
-      if ('a' <= input[i] && input[i] <= 'z') {
-        if (cap_next_letter) {
-          result += input[i] + ('A' - 'a');
-        } else {
-          result += input[i];
-        }
-        cap_next_letter = false;
-      } else if ('A' <= input[i] && input[i] <= 'Z') {
-        if (cap_next_letter) {
-          result += input[i];
-        } else {
-          result += input[i] + ('a' - 'A');
-        }
-        cap_next_letter = false;
-      } else if ('0' <= input[i] && input[i] <= '9') {
+      if ( isalnum(input[i]) || input[i] == '_') {
         result += input[i];
-        cap_next_letter = true;
       } else {
-        cap_next_letter = true;
+        result += '_';
       }
     }
     return result;
   }
-  
+
   string GetFileNameBase(const FileDescriptor* descriptor) {
       string proto_file = descriptor->name();
       int lastslash = proto_file.find_last_of("/");
       string base = proto_file.substr(lastslash + 1);
-      return UnderscoresToCamelCase(StripDotProto(base));
+      return InvalidCharsToUnderscores(StripDotProto(base));
   }
 
   bool ValidateInputFileName(const FileDescriptor* descriptor) {
@@ -58,7 +42,7 @@ namespace chapel {
   }
 
   string GetPackageName(const FileDescriptor* descriptor) {
-    return UnderscoresToCamelCase(descriptor->package());
+    return InvalidCharsToUnderscores(descriptor->package());
   }
 
   string GetModuleName(const FileDescriptor* descriptor) {
@@ -88,7 +72,7 @@ namespace chapel {
   }
 
   string GetPropertyName(const FieldDescriptor* descriptor) {
-    string property_name = UnderscoresToCamelCase(GetFieldName(descriptor));
+    string property_name = GetFieldName(descriptor);
     property_name += "_";
     return property_name;
   }
