@@ -69,7 +69,7 @@ namespace chapel {
       "}\n"
       "\n");
 
-    printer->Print("var unknowFieldStream: bytes = \"\";\n");
+    printer->Print("var unknownFieldStream: bytes = \"\";\n");
     printer->Print("\n");
 
     printer->Print("proc _writeToOutputFile(binCh) throws {\n");
@@ -81,7 +81,7 @@ namespace chapel {
         "$proto_field_type$Append($field_name$, binCh);\n");
     }
 
-    printer->Print("binCh.write(unknowFieldStream);\n");
+    printer->Print("binCh.write(unknownFieldStream);\n");
     printer->Outdent();
     printer->Print("}\n");
 
@@ -113,7 +113,7 @@ namespace chapel {
       "  break;\n"
       "}\n"
       "otherwise {\n"
-      "  unknowFieldStream += unknowField(fieldNumber, wireType, binCh);\n"
+      "  unknownFieldStream += unknownField(fieldNumber, wireType, binCh);\n"
       "}\n");
 
     printer->Outdent();

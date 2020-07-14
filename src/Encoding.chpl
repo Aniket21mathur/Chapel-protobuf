@@ -235,7 +235,7 @@ module Encoding {
     return b;
   }
 
-  proc unknowField(fieldNumber, wireType, ch): bytes throws {
+  proc unknownField(fieldNumber, wireType, ch): bytes throws {
     var s: bytes;
     var tmpMem = openmem();
     var memWriter = tmpMem.writer(kind=iokind.little, locking=false);
