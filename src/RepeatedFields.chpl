@@ -1,7 +1,7 @@
 /* Documentation for RepeatedFields */
 module RepeatedFields {
   
-  use Encoding;
+  use WireEncoding;
   use List;
   use IO;
 

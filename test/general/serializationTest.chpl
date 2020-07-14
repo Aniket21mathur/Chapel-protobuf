@@ -1,4 +1,4 @@
-use Encoding;
+use WireEncoding;
 use IO;
 
 var f = openmem();

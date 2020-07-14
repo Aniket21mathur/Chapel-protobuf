@@ -1,5 +1,5 @@
-/* Documentation for Encoding */
-module Encoding {
+/* Documentation for WireEncoding */
+module WireEncoding {
 
   use IO;
 
@@ -58,7 +58,6 @@ module Encoding {
   }
   
   proc uint64Append(val: uint(64), ch: writingChannel) throws {
-    const wireType = varint;
     var uintVal = val:uint;
     unsignedVarintAppend(uintVal, ch);
   }
@@ -69,7 +68,6 @@ module Encoding {
   }
 
   proc uint32Append(val: uint(32), ch: writingChannel) throws {
-    const wireType = varint;
     var uintVal = val:uint;
     unsignedVarintAppend(uintVal, ch);
   }
@@ -78,10 +76,8 @@ module Encoding {
     var (val, len) = unsignedVarintConsume(ch);
     return val:uint(32);
   }
-  
 
   proc int64Append(val: int(64), ch: writingChannel) throws {
-    const wireType = varint;
     var uintVal = val:uint;
     unsignedVarintAppend(uintVal, ch);
   }
@@ -92,7 +88,6 @@ module Encoding {
   }
 
   proc int32Append(val: int(32), ch: writingChannel) throws {
-    const wireType = varint;
     var uintVal = val:uint;
     unsignedVarintAppend(uintVal, ch);
   }
@@ -103,7 +98,6 @@ module Encoding {
   }
 
   proc boolAppend(val: bool, ch: writingChannel) throws {
-    const wireType = varint;
     var uintVal = val:uint;
     unsignedVarintAppend(uintVal, ch);
   }
@@ -114,7 +108,6 @@ module Encoding {
   }
 
   proc sint64Append(val: int(64), ch: writingChannel) throws {
-    const wireType = varint;
     var uintVal = (val << 1):uint ^ (val >> 63):uint;
     unsignedVarintAppend(uintVal, ch);
   }
@@ -125,7 +118,6 @@ module Encoding {
   }
 
   proc sint32Append(val: int(64), ch: writingChannel) throws {
-    const wireType = varint;
     var uintVal = (val << 1):uint ^ (val >> 31):uint;
     unsignedVarintAppend(uintVal, ch);
   }
@@ -136,7 +128,6 @@ module Encoding {
   }
 
   proc bytesAppend(val: bytes, ch: writingChannel) throws {
-    const wireType = lengthDelimited;
     unsignedVarintAppend((val.size):uint, ch);
     ch.write(val);
   }
@@ -156,9 +147,7 @@ module Encoding {
     return bytesConsume(ch).decode();
   }
 
-
   proc fixed32Append(val: uint(32), ch: writingChannel) throws {
-    const wireType = fixed32Type;
     ch.write(val);
   }
 
@@ -169,7 +158,6 @@ module Encoding {
   }
 
   proc fixed64Append(val: uint(64), ch: writingChannel) throws {
-    const wireType = fixed64Type;
     ch.write(val);
   }
 

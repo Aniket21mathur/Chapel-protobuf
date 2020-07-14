@@ -20,8 +20,9 @@ namespace chapel {
     printer->Indent();
 
     printer->Print(
-      "use Encoding;\n"
+      "use SimpleFields;\n"
       "use RepeatedFields;\n"
+      "use WireEncoding;\n"
       "use List;\n");
     printer->Print("\n");
 
