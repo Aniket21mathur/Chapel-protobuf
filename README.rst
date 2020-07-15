@@ -6,13 +6,13 @@ for serializing structured data. The protocol buffer language is a language for
 specifying the schema for structured data. This schema is compiled into language
 specific bindings.
 
-This project comprises of two components:
+This project is comprised of two components:
 
 * Code generator: The `tool`_ is a compiler plugin to ``protoc``, the protocol
   buffer compiler. It arguments the ``protoc`` compiler so that it knows how to
   generate Chapel specific code for a given ``.proto`` file.
   
-* Chapel library: The `Encoding`_ module have the runtime implementation of protobufs
+* Chapel library: The `Encoding`_ module has the runtime implementation of protobufs
   in Chapel and provides functionality to serialize messages in wire format.
 
 Installation
@@ -35,9 +35,9 @@ Defining protocol format
 To make use of the Chapel protobuf implementation you need to start by defining
 a ``.proto`` file. The definitions in a ``.proto`` file contain a message for each
 data structure you want to serialize, then specify a name and a type for each 
-field in the message. We will take an example of ``addressbook`` for a person.
+field in the message. Here is an example of an ``addressbook`` for a person.
 
-The ``.proto`` file starts with an optional package declaration, helps to prevent
+The ``.proto`` file starts with an optional package declaration, which helps to prevent
 naming conflicts between different projects.
 
 .. code-block:: proto
@@ -47,7 +47,7 @@ naming conflicts between different projects.
 
 In Chapel the generated records will be placed in a module matching the ``package``
 name. If the ``package`` name is not specified the module takes the name of the
-proto file.
+proto file with all non-aplhanumeric characters replaced by an ``underscore``.
 
 Next, you have to define your messages. A message is just an aggregate containing
 a set of typed fields. Many standard simple data types are available as field types,
@@ -61,18 +61,17 @@ including int64, int32, float, double, and string.
     string email = 3;
   }
   
-In the above example the `Person` message contains 3 fields, ``string`` type ``name``,
-``int32`` type ``id`` and ``string`` type ``email``. If a field is not set default value
+In the above example the ``Person`` message contains 3 fields, ``string`` type ``name``,
+``int32`` type ``id`` and ``string`` type ``email``. If a field is not set, a default value
 is assigned to the field by Chapel.
 
 Compiling your protocol buffers
 -------------------------------
 
-The code generator integrated with the protoc compiler toolchain
+The code generator is integrated with the protoc compiler toolchain
 included in the default Protocol Buffers distribution. Use the ``protoc`` command
-with the ``--chpl_out`` flag, to invoke the Chapel code generator and write the
+with the ``--chpl_out`` flag to invoke the Chapel code generator and write the
 output ``chpl`` file to a specific location.
-location:
 
 .. code-block:: console
 
@@ -88,7 +87,7 @@ The generated ``addressbook.chpl`` file will contain:
 * A wrapper module with the name ``addressbook``.
 * A record with the name ``Person``.
 * ``name_``, ``id_``, and ``email_`` field initializers.
-* ``writeToOutputFile`` and ``parseFromInputFile`` functions for serialzation/parsing.
+* ``writeToOutputFile`` and ``parseFromInputFile`` functions for serialization/parsing.
 
 You can import this module to a ``chpl`` file and can create an instance of ``Person``
 for populating data.
@@ -103,11 +102,11 @@ for populating data.
   messageObj.id = 429496729;
   messageObj.email = "John@a.com";
   
-Serialzation and parsing
+Serialization and parsing
 ------------------------
 The whole purpose of using protocol buffers is to serialize your data so that it
 can be parsed elsewhere. You can serialize your message object using the 
-``IO`` module ``writeToOutputFile`` function.
+``IO`` module and the ``writeToOutputFile`` function.
 
 .. code-block:: chpl
   
