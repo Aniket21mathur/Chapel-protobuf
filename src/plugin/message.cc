@@ -79,7 +79,7 @@ namespace chapel {
     for (int i = 0; i < descriptor_->field_count(); i++) {
         if(vars[i]["is_repeated"] == "0") {
           printer->Print(vars[i],
-            "$proto_field_type$SimpleAppend($field_name$, $field_number$, binCh);\n");
+            "$proto_field_type$Append($field_name$, $field_number$, binCh);\n");
         } else {
           printer->Print(vars[i],
             "$proto_field_type$RepeatedAppend($field_name$, $field_number$, binCh);\n");
@@ -112,7 +112,7 @@ namespace chapel {
 
         if(vars[i]["is_repeated"] == "0") {
           printer->Print(vars[i],
-            "  $field_name$ = $proto_field_type$SimpleConsume(binCh);\n");
+            "  $field_name$ = $proto_field_type$Consume(binCh);\n");
         } else {
           printer->Print(vars[i],
             "$field_name$.extend($proto_field_type$RepeatedConsume(binCh));\n");

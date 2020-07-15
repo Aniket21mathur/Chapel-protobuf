@@ -57,167 +57,167 @@ module WireEncoding {
     unsignedVarintAppend(((fieldNumber << 3) | wireType):uint, ch);
   }
   
-  proc uint64Append(val: uint(64), ch: writingChannel) throws {
+  proc uint64AppendBase(val: uint(64), ch: writingChannel) throws {
     var uintVal = val:uint;
     unsignedVarintAppend(uintVal, ch);
   }
 
-  proc uint64Consume(ch: readingChannel): uint(64) throws {
+  proc uint64ConsumeBase(ch: readingChannel): uint(64) throws {
     var (val, len) = unsignedVarintConsume(ch);
     return val:uint(64);
   }
 
-  proc uint32Append(val: uint(32), ch: writingChannel) throws {
+  proc uint32AppendBase(val: uint(32), ch: writingChannel) throws {
     var uintVal = val:uint;
     unsignedVarintAppend(uintVal, ch);
   }
 
-  proc uint32Consume(ch: readingChannel): uint(32) throws {
+  proc uint32ConsumeBase(ch: readingChannel): uint(32) throws {
     var (val, len) = unsignedVarintConsume(ch);
     return val:uint(32);
   }
 
-  proc int64Append(val: int(64), ch: writingChannel) throws {
+  proc int64AppendBase(val: int(64), ch: writingChannel) throws {
     var uintVal = val:uint;
     unsignedVarintAppend(uintVal, ch);
   }
 
-  proc int64Consume(ch: readingChannel): int throws {
+  proc int64ConsumeBase(ch: readingChannel): int throws {
     var (val, len) = unsignedVarintConsume(ch);
     return val:int(64);
   }
 
-  proc int32Append(val: int(32), ch: writingChannel) throws {
+  proc int32AppendBase(val: int(32), ch: writingChannel) throws {
     var uintVal = val:uint;
     unsignedVarintAppend(uintVal, ch);
   }
 
-  proc int32Consume(ch: readingChannel): int(32) throws {
+  proc int32ConsumeBase(ch: readingChannel): int(32) throws {
     var (val, len) = unsignedVarintConsume(ch);
     return val:int(32);
   }
 
-  proc boolAppend(val: bool, ch: writingChannel) throws {
+  proc boolAppendBase(val: bool, ch: writingChannel) throws {
     var uintVal = val:uint;
     unsignedVarintAppend(uintVal, ch);
   }
 
-  proc boolConsume(ch: readingChannel): bool throws {
+  proc boolConsumeBase(ch: readingChannel): bool throws {
     var (val, len) = unsignedVarintConsume(ch);
     return val:bool;
   }
 
-  proc sint64Append(val: int(64), ch: writingChannel) throws {
+  proc sint64AppendBase(val: int(64), ch: writingChannel) throws {
     var uintVal = (val << 1):uint ^ (val >> 63):uint;
     unsignedVarintAppend(uintVal, ch);
   }
 
-  proc sint64Consume(ch: readingChannel): int(64) throws {
+  proc sint64ConsumeBase(ch: readingChannel): int(64) throws {
     const (val, len) = unsignedVarintConsume(ch);
     return (val >> 1):int(64) ^ (val):int(64) << 63 >> 63;
   }
 
-  proc sint32Append(val: int(64), ch: writingChannel) throws {
+  proc sint32AppendBase(val: int(64), ch: writingChannel) throws {
     var uintVal = (val << 1):uint ^ (val >> 31):uint;
     unsignedVarintAppend(uintVal, ch);
   }
 
-  proc sint32Consume(ch: readingChannel): int(32) throws {
+  proc sint32ConsumeBase(ch: readingChannel): int(32) throws {
     const (val, len) = unsignedVarintConsume(ch);
     return (val >> 1):int(32) ^ (val):int(32) << 31 >> 31;
   }
 
-  proc bytesAppend(val: bytes, ch: writingChannel) throws {
+  proc bytesAppendBase(val: bytes, ch: writingChannel) throws {
     unsignedVarintAppend((val.size):uint, ch);
     ch.write(val);
   }
 
-  proc bytesConsume(ch: readingChannel): bytes throws {
+  proc bytesConsumeBase(ch: readingChannel): bytes throws {
     const (byteLen, len) = unsignedVarintConsume(ch);
     var s:bytes;
     ch.readbytes(s, byteLen:int);
     return s;
   }
 
-  proc stringAppend(val: string, ch: writingChannel) throws {
-    bytesAppend(val.encode(), ch);
+  proc stringAppendBase(val: string, ch: writingChannel) throws {
+    bytesAppendBase(val.encode(), ch);
   }
 
-  proc stringConsume(ch: readingChannel): string throws {
-    return bytesConsume(ch).decode();
+  proc stringConsumeBase(ch: readingChannel): string throws {
+    return bytesConsumeBase(ch).decode();
   }
 
-  proc fixed32Append(val: uint(32), ch: writingChannel) throws {
+  proc fixed32AppendBase(val: uint(32), ch: writingChannel) throws {
     ch.write(val);
   }
 
-  proc fixed32Consume(ch: readingChannel): uint(32) throws {
+  proc fixed32ConsumeBase(ch: readingChannel): uint(32) throws {
     var val: uint(32);
     ch.read(val);
     return val;
   }
 
-  proc fixed64Append(val: uint(64), ch: writingChannel) throws {
+  proc fixed64AppendBase(val: uint(64), ch: writingChannel) throws {
     ch.write(val);
   }
 
-  proc fixed64Consume(ch: readingChannel): uint(64) throws {
+  proc fixed64ConsumeBase(ch: readingChannel): uint(64) throws {
     var val: uint(64);
     ch.read(val);
     return val;
   }
 
-  proc floatAppend(val: real(32), ch: writingChannel) throws {
+  proc floatAppendBase(val: real(32), ch: writingChannel) throws {
     var a = val;
     var b: uint(32);
     c_memcpy(c_ptrTo(b), c_ptrTo(a), c_sizeof(b.type));
-    fixed32Append(b, ch);
+    fixed32AppendBase(b, ch);
   }
   
-  proc floatConsume(ch: readingChannel): real(32) throws {
-    var a = fixed32Consume(ch);
+  proc floatConsumeBase(ch: readingChannel): real(32) throws {
+    var a = fixed32ConsumeBase(ch);
     var b: real(32);
     c_memcpy(c_ptrTo(b), c_ptrTo(a), c_sizeof(b.type));
     return b;
   }
 
-  proc doubleAppend(val: real(64), ch: writingChannel) throws {
+  proc doubleAppendBase(val: real(64), ch: writingChannel) throws {
     var a = val;
     var b: uint(64);
     c_memcpy(c_ptrTo(b), c_ptrTo(a), c_sizeof(b.type));
-    fixed64Append(b, ch);
+    fixed64AppendBase(b, ch);
   }
   
-  proc doubleConsume(ch: readingChannel): real(64) throws {
-    var a = fixed64Consume(ch);
+  proc doubleConsumeBase(ch: readingChannel): real(64) throws {
+    var a = fixed64ConsumeBase(ch);
     var b: real(64);
     c_memcpy(c_ptrTo(b), c_ptrTo(a), c_sizeof(b.type));
     return b;
   }
 
-  proc sfixed64Append(val: int(64), ch: writingChannel) throws {
+  proc sfixed64AppendBase(val: int(64), ch: writingChannel) throws {
     var a = val;
     var b: uint(64);
     c_memcpy(c_ptrTo(b), c_ptrTo(a), c_sizeof(b.type));
-    fixed64Append(b, ch);
+    fixed64AppendBase(b, ch);
   }
 
-  proc sfixed64Consume(ch: readingChannel): int(64) throws {
-    var a = fixed64Consume(ch);
+  proc sfixed64ConsumeBase(ch: readingChannel): int(64) throws {
+    var a = fixed64ConsumeBase(ch);
     var b: int(64);
     c_memcpy(c_ptrTo(b), c_ptrTo(a), c_sizeof(b.type));
     return b;
   }
 
-  proc sfixed32Append(val: int(32), ch: writingChannel) throws {
+  proc sfixed32AppendBase(val: int(32), ch: writingChannel) throws {
     var a = val;
     var b: uint(32);
     c_memcpy(c_ptrTo(b), c_ptrTo(a), c_sizeof(b.type));
-    fixed32Append(b, ch);
+    fixed32AppendBase(b, ch);
   }
 
-  proc sfixed32Consume(ch: readingChannel): int(32) throws {
-    var a = fixed32Consume(ch);
+  proc sfixed32ConsumeBase(ch: readingChannel): int(32) throws {
+    var a = fixed32ConsumeBase(ch);
     var b: int(32);
     c_memcpy(c_ptrTo(b), c_ptrTo(a), c_sizeof(b.type));
     return b;
@@ -234,14 +234,14 @@ module WireEncoding {
       var val = unsignedVarintConsume(ch)(0);
       unsignedVarintAppend(val, memWriter);
     } else if wireType == fixed64Type {
-      var val = fixed64Consume(ch);
-      fixed64Append(val, memWriter);
+      var val = fixed64ConsumeBase(ch);
+      fixed64AppendBase(val, memWriter);
     } else if wireType == lengthDelimited {
-      var val = bytesConsume(ch);
-      bytesAppend(val, memWriter);
+      var val = bytesConsumeBase(ch);
+      bytesAppendBase(val, memWriter);
     } else if wireType == fixed32Type {
-      var val = fixed32Consume(ch);
-      fixed32Append(val, memWriter);
+      var val = fixed32ConsumeBase(ch);
+      fixed32AppendBase(val, memWriter);
     }
 
     memWriter.close();

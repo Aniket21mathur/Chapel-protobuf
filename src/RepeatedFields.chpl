@@ -12,13 +12,13 @@ module RepeatedFields {
     var initialOffset = ch.offset();
     ch.mark();
     for val in valList {
-      uint64Append(val, ch);
+      uint64AppendBase(val, ch);
     }
     var currentOffset = ch.offset();
     ch.revert();
     unsignedVarintAppend((currentOffset-initialOffset):uint, ch);
     for val in valList {
-      uint64Append(val, ch);
+      uint64AppendBase(val, ch);
     }
   }
 
@@ -29,7 +29,7 @@ module RepeatedFields {
     var returnList: list(uint(64));
     while true {
       if (ch.offset() - initialOffset) >= payloadLength then break;
-      var val = uint64Consume(ch);
+      var val = uint64ConsumeBase(ch);
       returnList.append(val);
     }
     return returnList;
@@ -42,13 +42,13 @@ module RepeatedFields {
     var initialOffset = ch.offset();
     ch.mark();
     for val in valList {
-      uint32Append(val, ch);
+      uint32AppendBase(val, ch);
     }
     var currentOffset = ch.offset();
     ch.revert();
     unsignedVarintAppend((currentOffset-initialOffset):uint, ch);
     for val in valList {
-      uint32Append(val, ch);
+      uint32AppendBase(val, ch);
     }
   }
   
@@ -59,7 +59,7 @@ module RepeatedFields {
     var returnList: list(uint(32));
     while true {
       if (ch.offset() - initialOffset) >= payloadLength then break;
-      var val = uint32Consume(ch);
+      var val = uint32ConsumeBase(ch);
       returnList.append(val);
     }
     return returnList; 
@@ -72,13 +72,13 @@ module RepeatedFields {
     var initialOffset = ch.offset();
     ch.mark();
     for val in valList {
-      int64Append(val, ch);
+      int64AppendBase(val, ch);
     }
     var currentOffset = ch.offset();
     ch.revert();
     unsignedVarintAppend((currentOffset-initialOffset):uint, ch);
     for val in valList {
-      int64Append(val, ch);
+      int64AppendBase(val, ch);
     }
   }
   
@@ -89,7 +89,7 @@ module RepeatedFields {
     var returnList: list(int(64));
     while true {
       if (ch.offset() - initialOffset) >= payloadLength then break;
-      var val = int64Consume(ch);
+      var val = int64ConsumeBase(ch);
       returnList.append(val);
     }
     return returnList; 
@@ -102,13 +102,13 @@ module RepeatedFields {
     var initialOffset = ch.offset();
     ch.mark();
     for val in valList {
-      int32Append(val, ch);
+      int32AppendBase(val, ch);
     }
     var currentOffset = ch.offset();
     ch.revert();
     unsignedVarintAppend((currentOffset-initialOffset):uint, ch);
     for val in valList {
-      int32Append(val, ch);
+      int32AppendBase(val, ch);
     }
   }
   
@@ -119,7 +119,7 @@ module RepeatedFields {
     var returnList: list(int(32));
     while true {
       if (ch.offset() - initialOffset) >= payloadLength then break;
-      var val = int32Consume(ch);
+      var val = int32ConsumeBase(ch);
       returnList.append(val);
     }
     return returnList; 
@@ -132,7 +132,7 @@ module RepeatedFields {
     var payloadLength = valList.size; 
     unsignedVarintAppend(payloadLength:uint, ch);
     for val in valList {
-      boolAppend(val, ch);
+      boolAppendBase(val, ch);
     }
   }
 
@@ -143,7 +143,7 @@ module RepeatedFields {
     var returnList: list(bool);
     while true {
       if (ch.offset() - initialOffset) >= payloadLength then break;
-      var val = boolConsume(ch);
+      var val = boolConsumeBase(ch);
       returnList.append(val);
     }
     return returnList; 
@@ -156,13 +156,13 @@ module RepeatedFields {
     var initialOffset = ch.offset();
     ch.mark();
     for val in valList {
-      sint64Append(val, ch);
+      sint64AppendBase(val, ch);
     }
     var currentOffset = ch.offset();
     ch.revert();
     unsignedVarintAppend((currentOffset-initialOffset):uint, ch);
     for val in valList {
-      sint64Append(val, ch);
+      sint64AppendBase(val, ch);
     }
   }
   
@@ -173,7 +173,7 @@ module RepeatedFields {
     var returnList: list(int(64));
     while true {
       if (ch.offset() - initialOffset) >= payloadLength then break;
-      var val = sint64Consume(ch);
+      var val = sint64ConsumeBase(ch);
       returnList.append(val);
     }
     return returnList; 
@@ -186,13 +186,13 @@ module RepeatedFields {
     var initialOffset = ch.offset();
     ch.mark();
     for val in valList {
-      sint32Append(val, ch);
+      sint32AppendBase(val, ch);
     }
     var currentOffset = ch.offset();
     ch.revert();
     unsignedVarintAppend((currentOffset-initialOffset):uint, ch);
     for val in valList {
-      sint32Append(val, ch);
+      sint32AppendBase(val, ch);
     }
   }
   
@@ -203,7 +203,7 @@ module RepeatedFields {
     var returnList: list(int(32));
     while true {
       if (ch.offset() - initialOffset) >= payloadLength then break;
-      var val = sint32Consume(ch);
+      var val = sint32ConsumeBase(ch);
       returnList.append(val);
     }
     return returnList; 
@@ -213,13 +213,13 @@ module RepeatedFields {
     if valList.isEmpty() then return;
     for val in valList {
       tagAppend(fieldNumber, lengthDelimited, ch);
-      bytesAppend(val, ch);
+      bytesAppendBase(val, ch);
     }
   }
 
   proc bytesRepeatedConsume(ch: readingChannel) throws {
     var returnList: list(bytes);
-    var val = bytesConsume(ch);
+    var val = bytesConsumeBase(ch);
     returnList.append(val);
     return returnList;
   }
@@ -228,13 +228,13 @@ module RepeatedFields {
     if valList.isEmpty() then return;
     for val in valList {
       tagAppend(fieldNumber, lengthDelimited, ch);
-      stringAppend(val, ch);
+      stringAppendBase(val, ch);
     }
   }
 
   proc stringRepeatedConsume(ch: readingChannel) throws {
     var returnList: list(string);
-    var val = stringConsume(ch);
+    var val = stringConsumeBase(ch);
     returnList.append(val);
     return returnList;
   }
@@ -246,7 +246,7 @@ module RepeatedFields {
     var payloadLength = valList.size * 4; 
     unsignedVarintAppend(payloadLength:uint, ch);
     for val in valList {
-      fixed32Append(val, ch);
+      fixed32AppendBase(val, ch);
     }
   }
 
@@ -257,7 +257,7 @@ module RepeatedFields {
     var returnList: list(uint(32));
     while true {
       if (ch.offset() - initialOffset) >= payloadLength then break;
-      var val = fixed32Consume(ch);
+      var val = fixed32ConsumeBase(ch);
       returnList.append(val);
     }
     return returnList; 
@@ -270,7 +270,7 @@ module RepeatedFields {
     var payloadLength = valList.size * 8; 
     unsignedVarintAppend(payloadLength:uint, ch);
     for val in valList {
-      fixed64Append(val, ch);
+      fixed64AppendBase(val, ch);
     }
   }
 
@@ -281,7 +281,7 @@ module RepeatedFields {
     var returnList: list(uint(64));
     while true {
       if (ch.offset() - initialOffset) >= payloadLength then break;
-      var val = fixed64Consume(ch);
+      var val = fixed64ConsumeBase(ch);
       returnList.append(val);
     }
     return returnList; 
@@ -294,7 +294,7 @@ module RepeatedFields {
     var payloadLength = valList.size * 4; 
     unsignedVarintAppend(payloadLength:uint, ch);
     for val in valList {
-      floatAppend(val, ch);
+      floatAppendBase(val, ch);
     }
   }
 
@@ -305,7 +305,7 @@ module RepeatedFields {
     var returnList: list(real(32));
     while true {
       if (ch.offset() - initialOffset) >= payloadLength then break;
-      var val = floatConsume(ch);
+      var val = floatConsumeBase(ch);
       returnList.append(val);
     }
     return returnList; 
@@ -318,7 +318,7 @@ module RepeatedFields {
     var payloadLength = valList.size * 8; 
     unsignedVarintAppend(payloadLength:uint, ch);
     for val in valList {
-      doubleAppend(val, ch);
+      doubleAppendBase(val, ch);
     }
   }
 
@@ -329,7 +329,7 @@ module RepeatedFields {
     var returnList: list(real(64));
     while true {
       if (ch.offset() - initialOffset) >= payloadLength then break;
-      var val = doubleConsume(ch);
+      var val = doubleConsumeBase(ch);
       returnList.append(val);
     }
     return returnList; 
@@ -342,7 +342,7 @@ module RepeatedFields {
     var payloadLength = valList.size * 8; 
     unsignedVarintAppend(payloadLength:uint, ch);
     for val in valList {
-      sfixed64Append(val, ch);
+      sfixed64AppendBase(val, ch);
     }
   }
 
@@ -353,7 +353,7 @@ module RepeatedFields {
     var returnList: list(int(64));
     while true {
       if (ch.offset() - initialOffset) >= payloadLength then break;
-      var val = sfixed64Consume(ch);
+      var val = sfixed64ConsumeBase(ch);
       returnList.append(val);
     }
     return returnList; 
@@ -366,7 +366,7 @@ module RepeatedFields {
     var payloadLength = valList.size * 4; 
     unsignedVarintAppend(payloadLength:uint, ch);
     for val in valList {
-      sfixed32Append(val, ch);
+      sfixed32AppendBase(val, ch);
     }
   }
 
@@ -377,7 +377,7 @@ module RepeatedFields {
     var returnList: list(int(32));
     while true {
       if (ch.offset() - initialOffset) >= payloadLength then break;
-      var val = sfixed32Consume(ch);
+      var val = sfixed32ConsumeBase(ch);
       returnList.append(val);
     }
     return returnList; 
