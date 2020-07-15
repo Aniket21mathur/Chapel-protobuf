@@ -9,7 +9,7 @@ specific bindings.
 This project is comprised of two components:
 
 * Code generator: The `tool`_ is a compiler plugin to ``protoc``, the protocol
-  buffer compiler. It arguments the ``protoc`` compiler so that it knows how to
+  buffer compiler. It provides arguments to the ``protoc`` compiler so that it knows how to
   generate Chapel specific code for a given ``.proto`` file.
   
 * Chapel library: The `Encoding`_ module has the runtime implementation of protobufs
@@ -134,9 +134,10 @@ Features
 --------
 The following features are currently supported
 
-#. Message definitions
-#. All scalar types
-#. Strings and bytes
+#. `Message definitions`_
+#. `Scalar value types`_
+#. `Unknown fields`_
+#. `Packages`_
 
 
 .. _Protocol Buffers: https://developers.google.com/protocol-buffers
@@ -144,4 +145,7 @@ The following features are currently supported
 .. _Encoding: src/Encoding.chpl
 .. _Autotools: http://www.gnu.org/software/automake/manual/html_node/Autotools-Introduction.html
 .. _generate: generate.sh
- 
+.. _Message definitions: https://developers.google.com/protocol-buffers/docs/proto3#simple
+.. _Scalar value types: https://developers.google.com/protocol-buffers/docs/proto3#scalar
+.. _Unknown fields: https://developers.google.com/protocol-buffers/docs/proto3#unknowns
+.. _Packages: https://developers.google.com/protocol-buffers/docs/proto3#packages
