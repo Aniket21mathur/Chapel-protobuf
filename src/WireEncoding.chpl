@@ -223,33 +223,6 @@ module WireEncoding {
     return b;
   }
 
-  proc unknownField(fieldNumber, wireType, ch): bytes throws {
-    var s: bytes;
-    var tmpMem = openmem();
-    var memWriter = tmpMem.writer(kind=iokind.little, locking=false);
-    var memReader = tmpMem.reader(kind=iokind.little, locking=false);
-
-    tagAppend(fieldNumber, wireType, memWriter);
-    if wireType == varint {
-      var val = unsignedVarintConsume(ch)(0);
-      unsignedVarintAppend(val, memWriter);
-    } else if wireType == fixed64Type {
-      var val = fixed64ConsumeBase(ch);
-      fixed64AppendBase(val, memWriter);
-    } else if wireType == lengthDelimited {
-      var val = bytesConsumeBase(ch);
-      bytesAppendBase(val, memWriter);
-    } else if wireType == fixed32Type {
-      var val = fixed32ConsumeBase(ch);
-      fixed32AppendBase(val, memWriter);
-    }
-
-    memWriter.close();
-    memReader.readbytes(s);
-    tmpMem.close();
-    return s;
-  }
-
   proc writeToOutputFileHelper(ref message, ch) throws {
     ch.lock();
     defer { ch.unlock(); }
