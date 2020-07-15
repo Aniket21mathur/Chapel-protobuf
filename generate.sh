@@ -4,6 +4,8 @@
 # To generate a chpl file from a proto file
 # ./generate.sh -f /path/to/file/
 
+export CHPL_MODULE_PATH=$PWD/src
+
 while getopts ":f:p:n:" opt; do
   case $opt in
     f) protoFile="$OPTARG"

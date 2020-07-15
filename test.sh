@@ -3,9 +3,6 @@
 # ./test.sh -e 1 :Run only end to end tests for all the suits in test/endToEnd
 # ./test.sh -e 1 -f "suiteName" :Run only end to end tests for a specific suit
 
-# todo- Add this to generate.sh
-export CHPL_MODULE_PATH=$PWD/src
-
 while getopts ":g:e:f:" opt; do
   case $opt in
     g) generalTests="$OPTARG"
