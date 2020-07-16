@@ -5,6 +5,7 @@
 #include <helpers.hh>
 #include <primitive_field.hh>
 #include <repeated_primitive_field.hh>
+#include <enum_field.hh>
 #include <field_base.hh>
 
 namespace chapel {
@@ -79,10 +80,15 @@ namespace chapel {
   }
 
   FieldGeneratorBase* CreateFieldGenerator(const FieldDescriptor* descriptor) {
-    if (descriptor->is_repeated()) {
-      return new RepeatedPrimitiveFieldGenerator(descriptor);
-    } else {
-      return new PrimitiveFieldGenerator(descriptor);
+    switch (descriptor->type()) {
+      case FieldDescriptor::TYPE_ENUM:
+        return new EnumFieldGenerator(descriptor);
+      default:
+        if (descriptor->is_repeated()) {
+          return new RepeatedPrimitiveFieldGenerator(descriptor);
+        } else {
+          return new PrimitiveFieldGenerator(descriptor);
+        }  
     }
   }
 
