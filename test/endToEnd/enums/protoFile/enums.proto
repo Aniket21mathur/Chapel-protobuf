@@ -7,6 +7,7 @@ enum color {
 }
 
 message enumTest {
-  color a = 1;
+  color a = 1; 
   int64 b = 2;
+  repeated color c = 3;
 }
