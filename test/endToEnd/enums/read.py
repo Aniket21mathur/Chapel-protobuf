@@ -16,3 +16,10 @@ if messageObj.b != 564:
 else:
     print("true")
     
+lst = [];
+lst.append(enums_pb2.color.blue)
+lst.append(enums_pb2.color.green)
+if messageObj.c != lst:
+    print("false")
+else:
+    print("true")

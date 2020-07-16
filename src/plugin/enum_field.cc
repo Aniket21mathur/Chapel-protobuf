@@ -12,7 +12,7 @@ namespace chapel {
   void EnumFieldGenerator::GenerateMembers(Printer* printer) {
     printer->Print(
       variables_,
-      "var $property_name$: $type_name$ = 0:$type_name$;\n"
+      "var $property_name$: $type_name$;\n"
       "proc $name$ { return $property_name$; }\n"
       "proc ref $name$ ref { return $property_name$; }\n"
     );

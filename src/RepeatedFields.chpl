@@ -382,5 +382,35 @@ module RepeatedFields {
     }
     return returnList; 
   }
+  
+  proc enumRepeatedAppend(valList, fieldNumber: int, ch: writingChannel) throws {
+    if valList.isEmpty() then return;
+
+    tagAppend(fieldNumber, lengthDelimited, ch);
+    var initialOffset = ch.offset();
+    ch.mark();
+    for val in valList {
+      enumAppendBase(val:uint, ch);
+    }
+    var currentOffset = ch.offset();
+    ch.revert();
+    unsignedVarintAppend((currentOffset-initialOffset):uint, ch);
+    for val in valList {
+      enumAppendBase(val:uint, ch);
+    }
+  }
+
+  proc enumRepeatedConsume(ch: readingChannel, type enumType) throws {
+    var (payloadLength, _) = unsignedVarintConsume(ch);
+    var initialOffset = ch.offset();
+
+    var returnList: list(enumType);
+    while true {
+      if (ch.offset() - initialOffset) >= payloadLength then break;
+      var val = enumConsumeBase(ch);
+      returnList.append(val:enumType);
+    }
+    return returnList;
+  }
 
 }
