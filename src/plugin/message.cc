@@ -13,6 +13,7 @@
 
 #include <helpers.hh>
 #include <message.hh>
+#include <enum.hh>
 #include <field_base.hh>
 
 namespace chapel {
@@ -41,6 +42,7 @@ namespace chapel {
       
       vars[i]["field_name"] = GetPropertyName(fieldDescriptor);
       vars[i]["field_number"] = StrCat(fieldDescriptor->number());
+      vars[i]["type_name"] = field_obj->type_name(fieldDescriptor);
       vars[i]["proto_field_type"] = field_obj->proto_type_name(fieldDescriptor);
       vars[i]["wire_format"] = StrCat(WireFormat::WireTypeForField(fieldDescriptor));
       vars[i]["is_repeated"] = StrCat(fieldDescriptor->is_repeated());
@@ -77,6 +79,10 @@ namespace chapel {
     printer->Indent();
 
     for (int i = 0; i < descriptor_->field_count(); i++) {
+      if(vars[i]["proto_field_type"] == "enum") {
+        printer->Print(vars[i],
+          "$proto_field_type$Append($field_name$:uint(64), $field_number$, binCh);\n");
+      } else {
         if(vars[i]["is_repeated"] == "0") {
           printer->Print(vars[i],
             "$proto_field_type$Append($field_name$, $field_number$, binCh);\n");
@@ -84,6 +90,7 @@ namespace chapel {
           printer->Print(vars[i],
             "$proto_field_type$RepeatedAppend($field_name$, $field_number$, binCh);\n");
         }
+      }
     }
 
     printer->Print("binCh.write(unknownFieldStream);\n");
@@ -109,13 +116,17 @@ namespace chapel {
     for (int i = 0; i < descriptor_->field_count(); i++) {
       printer->Print(vars[i],
         "when $field_number$ {\n");
-
-        if(vars[i]["is_repeated"] == "0") {
+        if(vars[i]["proto_field_type"] == "enum") {
           printer->Print(vars[i],
-            "  $field_name$ = $proto_field_type$Consume(binCh);\n");
+            "  $field_name$ = $proto_field_type$Consume(binCh):$type_name$;\n");
         } else {
-          printer->Print(vars[i],
-            "$field_name$.extend($proto_field_type$RepeatedConsume(binCh));\n");
+          if(vars[i]["is_repeated"] == "0") {
+            printer->Print(vars[i],
+              "  $field_name$ = $proto_field_type$Consume(binCh);\n");
+          } else {
+            printer->Print(vars[i],
+              "$field_name$.extend($proto_field_type$RepeatedConsume(binCh));\n");
+          }
         }
 
         printer->Print("}\n");

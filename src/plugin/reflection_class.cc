@@ -1,6 +1,7 @@
 #include <reflection_class.hh>
 #include <message.hh>
 #include <helpers.hh>
+#include <enum.hh>
 
 namespace chapel {
 
@@ -25,6 +26,16 @@ namespace chapel {
       "use WireEncoding;\n"
       "use List;\n");
     printer->Print("\n");
+    
+    // write children: Enums
+    if (file_->enum_type_count() > 0) {
+      printer->Print("// Enums\n");
+      for (int i = 0; i < file_->enum_type_count(); i++) {
+        EnumGenerator enumGenerator(file_->enum_type(i));
+        enumGenerator.Generate(printer);
+      }
+      printer->Print("\n");
+    }
 
     // write children: Messages
     if (file_->message_type_count() > 0) {

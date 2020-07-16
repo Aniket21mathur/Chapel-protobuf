@@ -139,6 +139,15 @@ module Fields {
     return sfixed32ConsumeBase(ch);
   }
 
+  proc enumAppend(val: uint(64), fieldNumber: int, ch: writingChannel) throws {
+    tagAppend(fieldNumber, varint, ch);
+    enumAppendBase(val, ch);
+  }
+
+  proc enumConsume(ch: readingChannel): uint(64) throws {
+    return enumConsumeBase(ch);
+  }
+
   proc unknownField(fieldNumber, wireType, ch): bytes throws {
     var s: bytes;
     var tmpMem = openmem();
