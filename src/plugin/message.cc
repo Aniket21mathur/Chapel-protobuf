@@ -63,15 +63,15 @@ namespace chapel {
       generator->GenerateMembers(printer);
       printer->Print("\n");
     }
-    
+
+    printer->Print("var unknownFieldStream: bytes = \"\";\n");
+    printer->Print("\n");
+
     printer->Print(
       "proc writeToOutputFile(ch) throws {\n"
       "  writeToOutputFileHelper(this, ch);\n"
       "}\n"
       "\n");
-
-    printer->Print("var unknownFieldStream: bytes = \"\";\n");
-    printer->Print("\n");
 
     printer->Print("proc _writeToOutputFile(binCh) throws {\n");
     printer->Indent();
@@ -115,7 +115,7 @@ namespace chapel {
             "  $field_name$ = $proto_field_type$Consume(binCh);\n");
         } else {
           printer->Print(vars[i],
-            "$field_name$.extend($proto_field_type$RepeatedConsume(binCh));\n");
+            "  $field_name$.extend($proto_field_type$RepeatedConsume(binCh));\n");
         }
 
         printer->Print("}\n");
