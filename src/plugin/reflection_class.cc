@@ -43,11 +43,11 @@ namespace chapel {
       for (int i = 0; i < file_->message_type_count(); i++) {
         MessageGenerator messageGenerator(file_->message_type(i));
         messageGenerator.Generate(printer);
+        printer->Print("\n");
       }
     }
 
     printer->Outdent();
-    printer->Print("\n");
     printer->Print("}\n");
 
   }

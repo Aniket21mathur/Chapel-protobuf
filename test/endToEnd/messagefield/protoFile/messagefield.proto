@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+message messageA {
+  messageB a = 1;
+}
+
+message messageB {
+  int64 b = 1;
+  string c = 2;
+}

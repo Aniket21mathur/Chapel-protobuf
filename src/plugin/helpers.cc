@@ -7,6 +7,7 @@
 #include <repeated_primitive_field.hh>
 #include <enum_field.hh>
 #include <repeated_enum_field.hh>
+#include <message_field.hh>
 #include <field_base.hh>
 
 namespace chapel {
@@ -82,6 +83,8 @@ namespace chapel {
 
   FieldGeneratorBase* CreateFieldGenerator(const FieldDescriptor* descriptor) {
     switch (descriptor->type()) {
+      case FieldDescriptor::TYPE_MESSAGE:
+        return new MessageFieldGenerator(descriptor);
       case FieldDescriptor::TYPE_ENUM:
         if (descriptor->is_repeated()) {
           return new RepeatedEnumFieldGenerator(descriptor);
