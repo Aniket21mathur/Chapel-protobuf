@@ -139,7 +139,13 @@ module Fields {
     return sfixed32ConsumeBase(ch);
   }
 
-  proc unknownField(fieldNumber: int, wireType: int, ch: readingChannel): bytes throws {
+  proc consumeUnknownField(fieldNumber: int, wireType: int, ch: readingChannel): bytes throws {
+    /*
+    Opening a file, and generating a writing channel to give as an argument to the
+    append functions. The required bytes(unknown length) are first consumed out of
+    `ch` as `val` and then `val` is passed to corresponding append function to be
+    encoded as bytes and written to `tmpMem`.
+    */
     var s: bytes;
     var tmpMem = openmem();
     var memWriter = tmpMem.writer(kind=iokind.little, locking=false);

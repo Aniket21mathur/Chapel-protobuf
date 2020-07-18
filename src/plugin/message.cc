@@ -126,7 +126,7 @@ namespace chapel {
       "  break;\n"
       "}\n"
       "otherwise {\n"
-      "  unknownFieldStream += unknownField(fieldNumber, wireType, binCh);\n"
+      "  unknownFieldStream += consumeUnknownField(fieldNumber, wireType, binCh);\n"
       "}\n");
 
     printer->Outdent();
