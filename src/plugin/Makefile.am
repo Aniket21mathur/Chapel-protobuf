@@ -6,6 +6,7 @@ protoc_gen_chpl_SOURCES = \
 	helpers.cc \
 	reflection_class.cc\
 	primitive_field.cc\
+	repeated_primitive_field.cc\
 	message.cc\
 	field_base.cc
 protoc_gen_chpl_CPPFLAGS = \

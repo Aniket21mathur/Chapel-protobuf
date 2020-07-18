@@ -4,6 +4,7 @@
 
 #include <helpers.hh>
 #include <primitive_field.hh>
+#include <repeated_primitive_field.hh>
 #include <field_base.hh>
 
 namespace chapel {
@@ -78,7 +79,11 @@ namespace chapel {
   }
 
   FieldGeneratorBase* CreateFieldGenerator(const FieldDescriptor* descriptor) {
-    return new PrimitiveFieldGenerator(descriptor);
+    if (descriptor->is_repeated()) {
+      return new RepeatedPrimitiveFieldGenerator(descriptor);
+    } else {
+      return new PrimitiveFieldGenerator(descriptor);
+    }
   }
 
 } // namespace chapel
