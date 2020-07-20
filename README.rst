@@ -55,15 +55,30 @@ including int64, int32, float, double, and string.
 
 .. code-block:: proto
 
+  enum Contact {
+    FAMILY = 0;
+    FRIENDS = 1;
+    WORK = 2;
+  }
+
   message Person {
     string name = 1;
     int32 id = 2;  // Unique ID number for this person.
     string email = 3;
+
+    Contact contact = 4;
+
+    repeated string number = 5; // Person might have more than one number.
   }
   
-In the above example the ``Person`` message contains 3 fields, ``string`` type ``name``,
-``int32`` type ``id`` and ``string`` type ``email``. If a field is not set, a default value
-is assigned to the field by Chapel.
+In the above example the ``Person`` message contains 3 simple fields, ``string`` type ``name``,
+``int32`` type ``id`` and ``string`` type ``email``. You can also define enum types if
+you want one of your fields to have one of a predefined list of values - here you want
+to specify that a contact type can be one of FAMILY, FRIENDS, or WORK. The ``Contact`` type
+``contact`` is an example. If a field is repeated, the field may be repeated any number
+of times (including zero). For example, the ``string`` type ``number`` field. The order of
+the repeated values will be preserved in the protocol buffer. If a field is not set, a
+default value is assigned to the field by Chapel.
 
 Compiling your protocol buffers
 -------------------------------
@@ -86,7 +101,8 @@ The generated ``addressbook.chpl`` file will contain:
 
 * A wrapper module with the name ``addressbook``.
 * A record with the name ``Person``.
-* ``name_``, ``id_``, and ``email_`` field initializers.
+* An enum with the name ``Contact``.
+* ``name_``, ``id_``, ``email_``, ``contact_`` and ``number_`` field initializers.
 * ``writeToOutputFile`` and ``parseFromInputFile`` functions for serialization/parsing.
 
 You can import this module to a ``chpl`` file and can create an instance of ``Person``
@@ -101,7 +117,12 @@ for populating data.
   messageObj.name = "John";
   messageObj.id = 429496729;
   messageObj.email = "John@a.com";
+
+  messageObj.contact = Contact.WORK;
   
+  messageObj.number.append("555-4321");
+  messageObj.number.append("555-7890");
+
 Serialization and parsing
 ------------------------
 The whole purpose of using protocol buffers is to serialize your data so that it
@@ -138,6 +159,8 @@ The following features are currently supported
 #. `Scalar value types`_
 #. `Unknown fields`_
 #. `Packages`_
+#. `Enumerations`_
+#. `Repeated fields`_
 
 
 .. _Protocol Buffers: https://developers.google.com/protocol-buffers
@@ -149,3 +172,5 @@ The following features are currently supported
 .. _Scalar value types: https://developers.google.com/protocol-buffers/docs/proto3#scalar
 .. _Unknown fields: https://developers.google.com/protocol-buffers/docs/proto3#unknowns
 .. _Packages: https://developers.google.com/protocol-buffers/docs/proto3#packages
+.. _Enumerations: https://developers.google.com/protocol-buffers/docs/proto3#enum
+.. _Repeated fields: https://developers.google.com/protocol-buffers/docs/proto3#specifying_field_rules
