@@ -8,7 +8,10 @@ protoc_gen_chpl_SOURCES = \
 	primitive_field.cc\
 	repeated_primitive_field.cc\
 	message.cc\
-	field_base.cc
+	field_base.cc\
+	enum.cc\
+	enum_field.cc\
+	repeated_enum_field.cc
 protoc_gen_chpl_CPPFLAGS = \
 	-I.
 protoc_gen_chpl_LDADD = -lprotobuf -lprotoc

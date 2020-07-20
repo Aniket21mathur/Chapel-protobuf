@@ -223,6 +223,15 @@ module WireEncoding {
     return b;
   }
 
+  proc enumAppendBase(val: uint(64), ch: writingChannel) throws {
+    unsignedVarintAppend(val, ch);
+  }
+
+  proc enumConsumeBase(ch: readingChannel): uint(64) throws {
+    var (val, len) = unsignedVarintConsume(ch);
+    return val;
+  }
+
   proc writeToOutputFileHelper(ref message, ch) throws {
     ch.lock();
     defer { ch.unlock(); }

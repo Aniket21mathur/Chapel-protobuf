@@ -139,6 +139,15 @@ module Fields {
     return sfixed32ConsumeBase(ch);
   }
 
+  proc enumAppend(val: uint(64), fieldNumber: int, ch: writingChannel) throws {
+    tagAppend(fieldNumber, varint, ch);
+    enumAppendBase(val, ch);
+  }
+
+  proc enumConsume(ch: readingChannel): uint(64) throws {
+    return enumConsumeBase(ch);
+  }
+
   proc consumeUnknownField(fieldNumber: int, wireType: int, ch: readingChannel): bytes throws {
     /*
     Opening a file, and generating a writing channel to give as an argument to the
