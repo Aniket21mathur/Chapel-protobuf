@@ -11,7 +11,8 @@ protoc_gen_chpl_SOURCES = \
 	field_base.cpp\
 	enum.cpp\
 	enum_field.cpp\
-	repeated_enum_field.cpp
+	repeated_enum_field.cpp\
+	message_field.cpp
 protoc_gen_chpl_CPPFLAGS = \
 	-I.
 protoc_gen_chpl_LDADD = -lprotobuf -lprotoc
