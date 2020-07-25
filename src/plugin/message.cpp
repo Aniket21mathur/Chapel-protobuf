@@ -100,8 +100,13 @@ namespace chapel {
 
     for (int i = 0; i < descriptor_->field_count(); i++) {
       if(vars[i]["proto_field_type"] == "message") {
-        printer->Print(vars[i],
-          "$proto_field_type$Append($field_name$, $field_number$, binCh);\n");
+        if(vars[i]["is_repeated"] == "0") {
+          printer->Print(vars[i],
+            "$proto_field_type$Append($field_name$, $field_number$, binCh);\n");
+        } else {
+          printer->Print(vars[i],
+            "$proto_field_type$RepeatedAppend($field_name$, $field_number$, binCh);\n");
+        }
       } else if(vars[i]["proto_field_type"] == "enum") {
         if(vars[i]["is_repeated"] == "0") {
           printer->Print(vars[i],
@@ -145,8 +150,13 @@ namespace chapel {
       printer->Print(vars[i],
         "when $field_number$ {\n");
         if(vars[i]["proto_field_type"] == "message") {
-          printer->Print(vars[i],
-            "  $proto_field_type$Consume(binCh, $field_name$);\n");
+          if(vars[i]["is_repeated"] == "0") {
+            printer->Print(vars[i],
+              "  $proto_field_type$Consume(binCh, $field_name$);\n");
+          } else {
+            printer->Print(vars[i],
+              "  $field_name$.extend($proto_field_type$RepeatedConsume(binCh, $type_name$));\n");
+          }
         } else if(vars[i]["proto_field_type"] == "enum") {
           if(vars[i]["is_repeated"] == "0") {
             printer->Print(vars[i],

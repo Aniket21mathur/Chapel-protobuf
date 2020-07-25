@@ -260,6 +260,26 @@ module ProtobufProtocolSupport {
       return val;
     }
 
+    proc messageAppendBase(val, ch:writingChannel) throws {
+     var initialOffset = ch.offset();
+     ch.mark();
+     val._writeToOutputFile(ch);
+     var currentOffset = ch.offset();
+     ch.revert();
+     unsignedVarintAppend((currentOffset-initialOffset):uint, ch);
+     val._writeToOutputFile(ch);
+   }
+
+   proc messageConsumeBase(ch:readingChannel, ref recordObj, memWriter:writingChannel,
+                           memReader:readingChannel) throws {
+     var s: bytes;
+     var (payloadLength, _) = unsignedVarintConsume(ch);
+     ch.readbytes(s, payloadLength:int);
+     memWriter.write(s);
+     memWriter.close();
+     recordObj._parseFromInputFile(memReader);
+   }
+
     proc writeToOutputFileHelper(ref message, ch) throws {
       ch.lock();
       defer { ch.unlock(); }
@@ -458,26 +478,15 @@ module ProtobufProtocolSupport {
 
     proc messageAppend(val, fieldNumber: int, ch:writingChannel) throws {
      tagAppend(fieldNumber, lengthDelimited, ch);
-     var initialOffset = ch.offset();
-     ch.mark();
-     val._writeToOutputFile(ch);
-     var currentOffset = ch.offset();
-     ch.revert();
-     unsignedVarintAppend((currentOffset-initialOffset):uint, ch);
-     val._writeToOutputFile(ch);
+     messageAppendBase(val, ch);
    }
 
    proc messageConsume(ch:readingChannel, ref recordObj) throws {
-     var s: bytes;
      var tmpMem = openmem();
      var memWriter = tmpMem.writer(kind=iokind.little, locking=false);
      var memReader = tmpMem.reader(kind=iokind.little, locking=false);
 
-     var (payloadLength, _) = unsignedVarintConsume(ch);
-     ch.readbytes(s, payloadLength:int);
-     memWriter.write(s);
-     memWriter.close();
-     recordObj._parseFromInputFile(memReader);
+     messageConsumeBase(ch, recordObj, memWriter, memReader);
      tmpMem.close();
    }
 
@@ -928,6 +937,26 @@ module ProtobufProtocolSupport {
         var val = enumConsumeBase(ch);
         returnList.append(val:enumType);
       }
+      return returnList;
+    }
+   
+    proc messageRepeatedAppend(valList, fieldNumber: int, ch: writingChannel) throws {
+      if valList.isEmpty() then return;
+      for val in valList {
+        tagAppend(fieldNumber, lengthDelimited, ch);
+        messageAppendBase(val, ch);
+      }
+    }
+
+    proc messageRepeatedConsume(ch: readingChannel, type messageType) throws {
+      var returnList: list(messageType);
+      var tmpMem = openmem();
+      var memWriter = tmpMem.writer(kind=iokind.little, locking=false);
+      var memReader = tmpMem.reader(kind=iokind.little, locking=false);
+      
+      var tmpObj: messageType;
+      messageConsumeBase(ch, tmpObj, memWriter, memReader);
+      returnList.append(tmpObj);
       return returnList;
     }
 
