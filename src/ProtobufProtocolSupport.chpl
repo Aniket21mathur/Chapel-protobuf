@@ -270,14 +270,14 @@ module ProtobufProtocolSupport {
      val._writeToOutputFile(ch);
    }
 
-   proc messageConsumeBase(ch:readingChannel, ref recordObj, memWriter:writingChannel,
+   proc messageConsumeBase(ch:readingChannel, ref messageObj, memWriter:writingChannel,
                            memReader:readingChannel) throws {
      var s: bytes;
      var (payloadLength, _) = unsignedVarintConsume(ch);
      ch.readbytes(s, payloadLength:int);
      memWriter.write(s);
      memWriter.close();
-     recordObj._parseFromInputFile(memReader);
+     messageObj._parseFromInputFile(memReader);
    }
 
     proc writeToOutputFileHelper(ref message, ch) throws {
@@ -481,12 +481,12 @@ module ProtobufProtocolSupport {
      messageAppendBase(val, ch);
    }
 
-   proc messageConsume(ch:readingChannel, ref recordObj) throws {
+   proc messageConsume(ch:readingChannel, ref messageObj) throws {
      var tmpMem = openmem();
      var memWriter = tmpMem.writer(kind=iokind.little, locking=false);
      var memReader = tmpMem.reader(kind=iokind.little, locking=false);
 
-     messageConsumeBase(ch, recordObj, memWriter, memReader);
+     messageConsumeBase(ch, messageObj, memWriter, memReader);
      tmpMem.close();
    }
 
@@ -957,6 +957,7 @@ module ProtobufProtocolSupport {
       var tmpObj: messageType;
       messageConsumeBase(ch, tmpObj, memWriter, memReader);
       returnList.append(tmpObj);
+      tmpMem.close();
       return returnList;
     }
 
