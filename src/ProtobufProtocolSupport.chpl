@@ -477,18 +477,18 @@ module ProtobufProtocolSupport {
     }
 
     proc messageAppend(val, fieldNumber: int, ch:writingChannel) throws {
-     tagAppend(fieldNumber, lengthDelimited, ch);
-     messageAppendBase(val, ch);
-   }
+      tagAppend(fieldNumber, lengthDelimited, ch);
+      messageAppendBase(val, ch);
+    }
 
-   proc messageConsume(ch:readingChannel, ref messageObj) throws {
-     var tmpMem = openmem();
-     var memWriter = tmpMem.writer(kind=iokind.little, locking=false);
-     var memReader = tmpMem.reader(kind=iokind.little, locking=false);
+    proc messageConsume(ch:readingChannel, ref messageObj) throws {
+      var tmpMem = openmem();
+      var memWriter = tmpMem.writer(kind=iokind.little, locking=false);
+      var memReader = tmpMem.reader(kind=iokind.little, locking=false);
 
-     messageConsumeBase(ch, messageObj, memWriter, memReader);
-     tmpMem.close();
-   }
+      messageConsumeBase(ch, messageObj, memWriter, memReader);
+      tmpMem.close();
+    }
 
     proc consumeUnknownField(fieldNumber: int, wireType: int, ch: readingChannel): bytes throws {
       /*
