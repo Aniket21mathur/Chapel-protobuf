@@ -3,6 +3,11 @@ syntax = "proto3";
 message messageA {
   messageB a = 1;
   repeated messageC f = 2;
+  messageD g = 3;
+
+  message messageD {
+    int32 a = 1;
+  }
 }
 
 message messageB {

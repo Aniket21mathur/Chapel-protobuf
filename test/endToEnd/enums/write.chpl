@@ -13,4 +13,6 @@ messageObj.b = 564;
 messageObj.c.append(color.blue);
 messageObj.c.append(color.green);
 
+messageObj.d = enumTest_fruit.orange;
+
 messageObj.writeToOutputFile(writingChannel);

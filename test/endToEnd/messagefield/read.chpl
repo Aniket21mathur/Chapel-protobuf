@@ -14,3 +14,4 @@ writeln(messageObj.f[0].d == 26);
 writeln(messageObj.f[0].e == true);
 writeln(messageObj.f[1].d == 36);
 writeln(messageObj.f[1].e == false);
+writeln(messageObj.g.a == 76);

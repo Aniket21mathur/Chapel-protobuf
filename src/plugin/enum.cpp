@@ -21,6 +21,7 @@
 #include <google/protobuf/stubs/strutil.h>
 
 #include <enum.h>
+#include <helpers.h>
 
 namespace chapel {
 
@@ -33,7 +34,7 @@ namespace chapel {
 
   void EnumGenerator::Generate(Printer* printer) {
     printer->Print("enum $name$ {\n",
-                   "name", descriptor_->name());
+                   "name", GetEnumName(descriptor_));
     printer->Indent();
     
     for (int i = 0; i < descriptor_->value_count(); i++) {

@@ -50,7 +50,7 @@ namespace chapel {
   }
 
   string MessageGenerator::record_name() {
-    return descriptor_->name();
+    return GetMessageName(descriptor_);
   }
 
   void MessageGenerator::Generate(Printer* printer) {

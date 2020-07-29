@@ -18,4 +18,6 @@ tmpObj2.d = 36;
 tmpObj2.e = false;
 messageObj.f.append(tmpObj2);
 
+messageObj.g.a = 76;
+
 messageObj.writeToOutputFile(writingChannel);

@@ -14,6 +14,8 @@ tmpObj2.d = 36
 tmpObj2.e = False
 messageObj.f.append(tmpObj2)
 
+messageObj.g.a = 76
+
 file = open("out", "wb")
 file.write(messageObj.SerializeToString())
 file.close()

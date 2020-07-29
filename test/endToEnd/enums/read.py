@@ -23,3 +23,8 @@ if messageObj.c != lst:
     print("false")
 else:
     print("true")
+    
+if messageObj.d != messageObj.fruit.orange:
+    print("false")
+else:
+    print("true")

@@ -95,6 +95,21 @@ namespace chapel {
   string GetFieldName(const FieldDescriptor* descriptor) {
       return descriptor->name();
   }
+  
+  string GetNestedTypeName(const Descriptor* descriptor, string name) {
+    if (descriptor != NULL) {
+      return descriptor->name() + "_" + name;
+    }
+    return name;
+  }
+
+  string GetMessageName(const Descriptor* descriptor) {
+    return GetNestedTypeName(descriptor->containing_type(), descriptor->name());
+  }
+
+  string GetEnumName(const EnumDescriptor* descriptor) {
+    return GetNestedTypeName(descriptor->containing_type(), descriptor->name());
+  }
 
   FieldGeneratorBase* CreateFieldGenerator(const FieldDescriptor* descriptor) {
     switch (descriptor->type()) {

@@ -15,3 +15,5 @@ var lst = new list(color);
 lst.append(color.blue);
 lst.append(color.green);
 writeln(messageObj.c == lst);
+
+writeln(messageObj.d == enumTest_fruit.orange);

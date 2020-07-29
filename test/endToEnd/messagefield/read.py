@@ -20,3 +20,8 @@ if messageObj.f[1].d != 36 or messageObj.f[1].e != False:
     print("false")
 else:
     print("true")
+
+if messageObj.g.a != 76:
+    print("false")
+else:
+    print("true")
