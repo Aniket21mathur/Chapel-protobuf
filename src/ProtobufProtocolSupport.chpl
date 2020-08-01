@@ -481,13 +481,15 @@ module ProtobufProtocolSupport {
       messageAppendBase(val, ch);
     }
 
-    proc messageConsume(ch:readingChannel, ref messageObj) throws {
+    proc messageConsume(ch:readingChannel, type messageType) throws {
       var tmpMem = openmem();
       var memWriter = tmpMem.writer(kind=iokind.little, locking=false);
       var memReader = tmpMem.reader(kind=iokind.little, locking=false);
 
-      messageConsumeBase(ch, messageObj, memWriter, memReader);
+      var tmpObj: messageType;
+      messageConsumeBase(ch, tmpObj, memWriter, memReader);
       tmpMem.close();
+      return tmpObj;
     }
 
     proc consumeUnknownField(fieldNumber: int, wireType: int, ch: readingChannel): bytes throws {

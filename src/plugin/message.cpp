@@ -152,7 +152,7 @@ namespace chapel {
         if(vars[i]["proto_field_type"] == "message") {
           if(vars[i]["is_repeated"] == "0") {
             printer->Print(vars[i],
-              "  $proto_field_type$Consume(binCh, $field_name$);\n");
+              "  $field_name$ = $proto_field_type$Consume(binCh, $type_name$);\n");
           } else {
             printer->Print(vars[i],
               "  $field_name$.extend($proto_field_type$RepeatedConsume(binCh, $type_name$));\n");
