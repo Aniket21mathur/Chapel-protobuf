@@ -29,6 +29,7 @@
 #include <repeated_enum_field.h>
 #include <message_field.h>
 #include <repeated_message_field.h>
+#include <map_field.h>
 #include <field_base.h>
 
 namespace chapel {
@@ -115,7 +116,11 @@ namespace chapel {
     switch (descriptor->type()) {
       case FieldDescriptor::TYPE_MESSAGE:
         if (descriptor->is_repeated()) {
-          return new RepeatedMessageFieldGenerator(descriptor);
+          if (descriptor->is_map()) {
+            return new MapFieldGenerator(descriptor);
+          } else {
+            return new RepeatedMessageFieldGenerator(descriptor);
+          }
         } else {
           return new MessageFieldGenerator(descriptor);
         }
