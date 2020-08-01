@@ -18,40 +18,29 @@
  * limitations under the License.
  */
 
-#ifndef PB_HELPERS_HH
-#define PB_HELPERS_HH
+#ifndef PB_MAP_FIELD_HH
+#define PB_MAP_FIELD_HH
 
 #include <string>
 
+#include <google/protobuf/io/printer.h>
 #include <google/protobuf/descriptor.h>
-#include <google/protobuf/descriptor.pb.h>
-#include <google/protobuf/compiler/code_generator.h>
+
+#include <field_base.h>
 
 namespace chapel {
   
-  using namespace std;
-  
   using namespace google::protobuf;
-  using namespace google::protobuf::compiler;
-
-  class FieldGeneratorBase;
-
-  string GetOutputFile(const FileDescriptor* descriptor, string*error);
+  using namespace google::protobuf::io;
   
-  string GetFieldName(const FieldDescriptor* descriptor);
+  class MapFieldGenerator : public FieldGeneratorBase {
+   public:
+    MapFieldGenerator(const FieldDescriptor* descriptor);
+    ~MapFieldGenerator();
 
-  FieldGeneratorBase* CreateFieldGenerator(const FieldDescriptor* descriptor);
+    void GenerateMembers(Printer* printer);
+  };
 
-  string GetModuleName(const FileDescriptor* descriptor);
-  
-  string GetMessageName(const Descriptor* descriptor);
+}  // namespace chapelespace chapel
 
-  string GetEnumName(const EnumDescriptor* descriptor);
-  
-  inline bool IsMapEntryMessage(const Descriptor* descriptor) {
-    return descriptor->options().map_entry();
-  }
-
-} // namespace chapel
-
-#endif /* PB_HELPERS_HH */
+#endif  // PB_MAP_FIELD_HH

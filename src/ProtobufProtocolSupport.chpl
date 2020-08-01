@@ -492,6 +492,109 @@ module ProtobufProtocolSupport {
       return tmpObj;
     }
 
+    proc mapAppend(val, fieldNumber: int, param protoKeyType: string,
+      param protoValueType: string, ch:writingChannel) throws {
+      for (key, value) in val.items() {
+        tagAppend(fieldNumber, lengthDelimited, ch);
+        var initialOffset = ch.offset();
+        ch.mark();
+        protoFieldAppendHelper(key, 1, protoKeyType, ch);
+        protoFieldAppendHelper(value, 2, protoValueType, ch);
+        var currentOffset = ch.offset();
+        ch.revert();
+        unsignedVarintAppend((currentOffset-initialOffset):uint, ch);
+        protoFieldAppendHelper(key, 1, protoKeyType, ch);
+        protoFieldAppendHelper(value, 2, protoValueType, ch);
+      }
+    }
+
+    proc mapConsume(ch:readingChannel, ref mapField, param protoKeyType:string,
+      param protoValueType:string, type keyType, type valueType) throws {
+      var (payloadLength, _) = unsignedVarintConsume(ch);
+
+      tagConsume(ch);
+      var key = protoFieldConsumeHelper(ch, protoKeyType, keyType);
+      tagConsume(ch);
+      var value = protoFieldConsumeHelper(ch, protoValueType, valueType);
+      mapField[key] = value;
+    }
+
+    proc protoFieldAppendHelper(val, fieldNumber:int, param protoFieldType, ch:writingChannel) throws {
+      if protoFieldType == "uint64" {
+        uint64Append(val, fieldNumber, ch);
+      } else if protoFieldType == "uint32" {
+        uint32Append(val, fieldNumber, ch);
+      } else if protoFieldType == "int64" {
+        int64Append(val, fieldNumber, ch);
+      } else if protoFieldType == "int32" {
+        int32Append(val, fieldNumber, ch);
+      } else if protoFieldType == "bool" {
+        boolAppend(val, fieldNumber, ch);
+      } else if protoFieldType == "sint64" {
+        sint64Append(val, fieldNumber, ch);
+      } else if protoFieldType == "sint32" {
+        sint32Append(val, fieldNumber, ch);
+      } else if protoFieldType == "bytes" {
+        bytes64Append(val, fieldNumber, ch);
+      } else if protoFieldType == "string" {
+        stringAppend(val, fieldNumber, ch);
+      } else if protoFieldType == "fixed32" {
+        fixed32Append(val, fieldNumber, ch);
+      } else if protoFieldType == "fixed64" {
+        fixed64Append(val, fieldNumber, ch);
+      } else if protoFieldType == "float" {
+        floatAppend(val, fieldNumber, ch);
+      } else if protoFieldType == "double" {
+        doubleAppend(val, fieldNumber, ch);
+      } else if protoFieldType == "sfixed64" {
+        sfixed64Append(val, fieldNumber, ch);
+      } else if protoFieldType == "sfixed32" {
+        sfixed32Append(val, fieldNumber, ch);
+      } else if protoFieldType == "enum" {
+        enumAppend(val, fieldNumber, ch);
+      } else if protoFieldType == "message" {
+        messageAppend(val, fieldNumber, ch);
+      }
+    }
+
+    proc protoFieldConsumeHelper(ch:readingChannel, param protoFieldType, type fieldType) throws {
+      if protoFieldType == "uint64" {
+        return uint64Consume(ch);
+      } else if protoFieldType == "uint32" {
+        return uint32Consume(ch);
+      } else if protoFieldType == "int64" {
+        return int64Consume(ch);
+      } else if protoFieldType == "int32" {
+        return int32Consume(ch);
+      } else if protoFieldType == "bool" {
+        boolConsume(ch);
+      } else if protoFieldType == "sint64" {
+        return sint64Consume(ch);
+      } else if protoFieldType == "sint32" {
+        return sint32Consume(ch);
+      } else if protoFieldType == "bytes" {
+        return bytes64Consume(ch);
+      } else if protoFieldType == "string" {
+        return stringConsume(ch);
+      } else if protoFieldType == "fixed32" {
+        return fixed32Consume(ch);
+      } else if protoFieldType == "fixed64" {
+        return fixed64Consume(ch);
+      } else if protoFieldType == "float" {
+        return floatConsume(ch);
+      } else if protoFieldType == "double" {
+        return doubleConsume(ch);
+      } else if protoFieldType == "sfixed64" {
+        return sfixed64Consume(ch);
+      } else if protoFieldType == "sfixed32" {
+        return sfixed32Consume(ch);
+      } else if protoFieldType == "enum" {
+        return enumConsume(ch);
+      } else if protoFieldType == "message" {
+        return messageConsume(ch, fieldType);
+      }
+    }
+
     proc consumeUnknownField(fieldNumber: int, wireType: int, ch: readingChannel): bytes throws {
       /*
       Opening a file, and generating a writing channel to give as an argument to the
