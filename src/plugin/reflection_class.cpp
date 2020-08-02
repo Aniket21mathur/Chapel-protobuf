@@ -55,6 +55,34 @@ namespace chapel {
         printer->Print("\n");
       }
     }
+    
+    // write children: Oneof enums
+    for (int i = 0; i < file_->message_type_count(); i++) {
+      const Descriptor* descriptor = file_->message_type(i);
+      
+      for (int i = 0; i < descriptor->real_oneof_decl_count(); i++) {
+        const OneofDescriptor* oneof = descriptor->oneof_decl(i);
+        string oneof_name = GetOneofName(oneof);
+        printer->Print("enum $oneof_name$ {\n",
+                       "oneof_name", oneof_name);
+        printer->Indent();
+
+        printer->Print("None = 0,\n");
+        for (int j = 0; j < oneof->field_count(); j++) {
+          const FieldDescriptor* field = oneof->field(j);
+          printer->Print("$field_name$ = $index$,\n",
+                         "field_name", field->name(),
+                         "index", StrCat(field->number()));
+        }
+        printer->Outdent();
+        printer->Print("}\n");
+
+        printer->Print("var $oneof_name$SetVal: $oneof_name$;\n",
+                       "oneof_name", oneof_name);
+        printer->Print("\n");
+      }      
+      
+    }    
 
     // write children: Messages
     if (file_->message_type_count() > 0) {

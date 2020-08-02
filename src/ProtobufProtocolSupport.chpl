@@ -468,6 +468,8 @@ module ProtobufProtocolSupport {
     }
 
     proc enumAppend(val: uint(64), fieldNumber: int, ch: writingChannel) throws {
+      if val == 0 then return;
+
       tagAppend(fieldNumber, varint, ch);
       enumAppendBase(val, ch);
     }
@@ -477,6 +479,9 @@ module ProtobufProtocolSupport {
     }
 
     proc messageAppend(val, fieldNumber: int, ch:writingChannel) throws {
+      var defaultValue: val.type;
+      if(val == defaultValue) then return;
+
       tagAppend(fieldNumber, lengthDelimited, ch);
       messageAppendBase(val, ch);
     }

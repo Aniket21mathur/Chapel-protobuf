@@ -48,6 +48,8 @@ namespace chapel {
 
   string GetEnumName(const EnumDescriptor* descriptor);
   
+  string GetOneofName(const OneofDescriptor* descriptor);
+  
   inline bool IsMapEntryMessage(const Descriptor* descriptor) {
     return descriptor->options().map_entry();
   }
