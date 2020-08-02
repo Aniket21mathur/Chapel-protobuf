@@ -39,6 +39,14 @@ namespace chapel {
     void GenerateMembers(Printer* printer);
   };
 
+  class MessageOneofFieldGenerator : public FieldGeneratorBase {
+   public:
+    MessageOneofFieldGenerator(const FieldDescriptor* descriptor);
+    ~MessageOneofFieldGenerator();
+
+    void GenerateMembers(Printer* printer);
+  };
+
 }  // namespace chapel
 
 #endif /* PB_MESSAGE_FIELD_HH */
