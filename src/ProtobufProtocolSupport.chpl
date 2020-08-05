@@ -280,7 +280,7 @@ module ProtobufProtocolSupport {
   module Fields {
 
     use IO;
-    use WireEncoding;
+    use super.WireEncoding;
 
     proc uint64Append(val: uint(64), fieldNumber: int, ch: writingChannel) throws {
       if val == 0 then return;
@@ -494,7 +494,7 @@ module ProtobufProtocolSupport {
   /* Documentation for RepeatedFields */
   module RepeatedFields {
     
-    use WireEncoding;
+    use super.WireEncoding;
     use List;
     use IO;
 
