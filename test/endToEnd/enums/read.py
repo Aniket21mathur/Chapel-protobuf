@@ -28,3 +28,11 @@ if messageObj.d != messageObj.fruit.orange:
     print("false")
 else:
     print("true")
+    
+lst = [];
+lst.append(messageObj.fruit.orange)
+lst.append(messageObj.fruit.apple)
+if messageObj.e != lst:
+    print("false")
+else:
+    print("true")

@@ -20,4 +20,11 @@ messageObj.f.append(tmpObj2);
 
 messageObj.g.a = 76;
 
+var tmpObj3:messageA_messageD;
+var tmpObj4:messageA_messageD;
+tmpObj3.a = 26;
+messageObj.h.append(tmpObj3);
+tmpObj4.a = 46;
+messageObj.h.append(tmpObj4);
+
 messageObj.writeToOutputFile(writingChannel);

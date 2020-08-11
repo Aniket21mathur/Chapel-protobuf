@@ -65,9 +65,9 @@ namespace chapel {
       }
     }
 
-    // write grand chindren: Message nested types
+    // write grand children: Message nested types
     // handled here since nested records and enum declaration in records
-    // is not yet supported in Chapel.
+    // are not yet supported in Chapel.
     printer->Print("// Nested Types\n");
     for (int i = 0; i < file_->message_type_count(); i++) {
       const Descriptor* descriptor = file_->message_type(i);
