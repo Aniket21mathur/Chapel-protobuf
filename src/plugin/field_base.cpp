@@ -83,6 +83,8 @@ namespace chapel {
         return "int(64)";
       case FieldDescriptor::TYPE_ENUM:
         return descriptor->enum_type()->name();
+      case FieldDescriptor::TYPE_MESSAGE:
+        return descriptor->message_type()->name();
       default:
         GOOGLE_LOG(FATAL)<< "Unknown field type.";
         return "";
@@ -123,6 +125,8 @@ namespace chapel {
         return "sfixed64";
       case FieldDescriptor::TYPE_ENUM:
         return "enum";
+      case FieldDescriptor::TYPE_MESSAGE:
+        return "message";
       default:
         GOOGLE_LOG(FATAL)<< "Unknown field type.";
         return "";
