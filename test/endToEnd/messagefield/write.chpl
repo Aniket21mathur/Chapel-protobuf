@@ -27,4 +27,4 @@ messageObj.h.append(tmpObj3);
 tmpObj4.a = 46;
 messageObj.h.append(tmpObj4);
 
-messageObj.writeToOutputFile(writingChannel);
+messageObj.serialize(writingChannel);

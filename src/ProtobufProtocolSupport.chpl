@@ -263,11 +263,11 @@ module ProtobufProtocolSupport {
     proc messageAppendBase(val, ch:writingChannel) throws {
      var initialOffset = ch.offset();
      ch.mark();
-     val._writeToOutputFile(ch);
+     val._serialize(ch);
      var currentOffset = ch.offset();
      ch.revert();
      unsignedVarintAppend((currentOffset-initialOffset):uint, ch);
-     val._writeToOutputFile(ch);
+     val._serialize(ch);
    }
 
    proc messageConsumeBase(ch:readingChannel, ref messageObj, memWriter:writingChannel,
@@ -277,21 +277,21 @@ module ProtobufProtocolSupport {
      ch.readbytes(s, payloadLength:int);
      memWriter.write(s);
      memWriter.close();
-     messageObj._parseFromInputFile(memReader);
+     messageObj._deserialize(memReader);
    }
 
-    proc writeToOutputFileHelper(ref message, ch) throws {
+    proc serializeHelper(ref message, ch) throws {
       ch.lock();
       defer { ch.unlock(); }
       var binCh: channel(writing=true, kind=iokind.little, locking=false) = ch;
-      message._writeToOutputFile(binCh);
+      message._serialize(binCh);
     }
 
-    proc parseFromInputFileHelper(ref message, ch) throws {
+    proc deserializeHelper(ref message, ch) throws {
       ch.lock();
       defer { ch.unlock(); }
       var binCh: channel(writing=false, kind=iokind.little, locking=false) = ch;
-      message._parseFromInputFile(binCh);
+      message._deserialize(binCh);
     }
 
   }

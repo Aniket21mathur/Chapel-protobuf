@@ -18,4 +18,4 @@ messageObj.d = enumTest_fruit.orange;
 messageObj.e.append(enumTest_fruit.orange);
 messageObj.e.append(enumTest_fruit.apple);
 
-messageObj.writeToOutputFile(writingChannel);
+messageObj.serialize(writingChannel);

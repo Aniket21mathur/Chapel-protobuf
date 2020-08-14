@@ -90,12 +90,12 @@ namespace chapel {
     printer->Print("\n");
 
     printer->Print(
-      "proc writeToOutputFile(ch) throws {\n"
-      "  writeToOutputFileHelper(this, ch);\n"
+      "proc serialize(ch) throws {\n"
+      "  serializeHelper(this, ch);\n"
       "}\n"
       "\n");
 
-    printer->Print("proc _writeToOutputFile(binCh) throws {\n");
+    printer->Print("proc _serialize(binCh) throws {\n");
     printer->Indent();
 
     for (int i = 0; i < descriptor_->field_count(); i++) {
@@ -132,13 +132,13 @@ namespace chapel {
 
     printer->Print("\n");
     printer->Print(
-      "proc parseFromInputFile(ch) throws {\n"
-      "  parseFromInputFileHelper(this, ch);\n"
+      "proc deserialize(ch) throws {\n"
+      "  deserializeHelper(this, ch);\n"
       "}\n"
       "\n");
 
     printer->Print(
-      "proc _parseFromInputFile(binCh) throws {\n"
+      "proc _deserialize(binCh) throws {\n"
       "  while true {\n"
       "    var (fieldNumber, wireType) = tagConsume(binCh);\n"
       "    select fieldNumber {\n");
