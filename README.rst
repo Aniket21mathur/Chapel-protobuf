@@ -31,11 +31,20 @@ After Installation, the code generator can be used to generate bindings from
 ``.proto`` schema files to get started.
 
 Defining protocol format
-------------------------
+========================
+
 To make use of the Chapel protobuf implementation you need to start by defining
 a ``.proto`` file. The definitions in a ``.proto`` file contain a message for each
 data structure you want to serialize, then specify a name and a type for each 
-field in the message. Here is an example of an ``addressbook`` for a person.
+field in the message.
+
+Below is an example of an ``addressbook`` for a person. This section descibes a
+simple ``.proto`` file and the corresponding generated chapel code. For complete
+details on ``.proto`` files see the links at the end of this document.
+
+.. note::
+
+    The Chapel implementation only supports the `proto3`_ syntax of protobuf.
 
 The ``.proto`` file starts with an optional package declaration, which helps to prevent
 naming conflicts between different projects.
@@ -47,7 +56,7 @@ naming conflicts between different projects.
 
 In Chapel the generated records will be placed in a module matching the ``package``
 name. If the ``package`` name is not specified the module takes the name of the
-proto file with all non-aplhanumeric characters replaced by an ``underscore``.
+proto file with all non-alphanumeric characters replaced by an ``underscore``.
 
 Next, you have to define your messages. A message is just an aggregate containing
 a set of typed fields. Many standard simple data types are available as field types,
@@ -71,17 +80,20 @@ including int64, int32, float, double, and string.
     repeated string number = 5; // Person might have more than one number.
   }
   
-In the above example the ``Person`` message contains 3 simple fields, ``string`` type ``name``,
-``int32`` type ``id`` and ``string`` type ``email``. You can also define enum types if
-you want one of your fields to have one of a predefined list of values - here you want
-to specify that a contact type can be one of FAMILY, FRIENDS, or WORK. The ``Contact`` type
-``contact`` is an example. If a field is repeated, the field may be repeated any number
-of times (including zero). For example, the ``string`` type ``number`` field. The order of
-the repeated values will be preserved in the protocol buffer. If a field is not set, a
-default value is assigned to the field by Chapel.
+In the above example the ``Person`` message contains a ``string`` typed ``name``
+field with field number ``1``, a ``int32`` typed ``id`` field with field number
+``2`` as well as a ``string`` typed ``email`` field with field number ``3``. You
+can also define enum types if you want one of your fields to have one of a
+predefined list of values - here you want to specify that a contact type can be
+one of FAMILY, FRIENDS, or WORK. The ``contact`` field with field number
+``4`` is an example. If a field is repeated, the field may be repeated any number
+of times (including zero). For example, the ``string`` typed ``number`` field with
+field number ``5``. The order of the repeated values will be preserved in the protocol
+buffer. If a field is not set, a default value is assigned to the field by Chapel.
+
 
 Compiling your protocol buffers
--------------------------------
+===============================
 
 The code generator is integrated with the protoc compiler toolchain
 included in the default Protocol Buffers distribution. Use the ``protoc`` command
@@ -94,19 +106,20 @@ output ``chpl`` file to a specific location.
 
 This generates ``addressbook.chpl`` in your specified directory.
 
+
 The generated file
-------------------
+==================
 
 The generated ``addressbook.chpl`` file will contain:
 
 * A wrapper module with the name ``addressbook``.
 * A record with the name ``Person``.
 * An enum with the name ``Contact``.
-* ``name_``, ``id_``, ``email_``, ``contact_`` and ``number_`` field initializers.
+* ``name``, ``id``, ``email``, ``contact`` and ``number`` fields.
 * ``serialize`` and ``deserialize`` functions for serialization/parsing.
 
 You can import this module to a ``chpl`` file and can create an instance of ``Person``
-for populating data.
+for populating data;
 
 .. code-block:: chpl
 
@@ -123,8 +136,10 @@ for populating data.
   messageObj.number.append("555-4321");
   messageObj.number.append("555-7890");
 
+
 Serialization and parsing
-------------------------
+=========================
+
 The whole purpose of using protocol buffers is to serialize your data so that it
 can be parsed elsewhere. You can serialize your message object using the 
 ``IO`` module and the ``serialize`` function.
@@ -152,7 +167,8 @@ function. So to parse the file we have just created we can use:
 
 
 Features
---------
+========
+
 The following features are currently supported
 
 #. `Message definitions`_
@@ -164,10 +180,8 @@ The following features are currently supported
 
 
 .. _Protocol Buffers: https://developers.google.com/protocol-buffers
-.. _tool: src/plugin/
-.. _Encoding: src/Encoding.chpl
-.. _Autotools: http://www.gnu.org/software/automake/manual/html_node/Autotools-Introduction.html
-.. _generate: generate.sh
+.. _proto3: https://developers.google.com/protocol-buffers/docs/proto3
+.. _guide: https://github.com/protocolbuffers/protobuf#protocol-compiler-installation
 .. _Message definitions: https://developers.google.com/protocol-buffers/docs/proto3#simple
 .. _Scalar value types: https://developers.google.com/protocol-buffers/docs/proto3#scalar
 .. _Unknown fields: https://developers.google.com/protocol-buffers/docs/proto3#unknowns
