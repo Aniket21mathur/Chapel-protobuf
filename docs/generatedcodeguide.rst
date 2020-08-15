@@ -11,9 +11,9 @@ Compiler Invocation
 The protocol buffer compiler produces Chapel output when invoked with the ``--chpl_out``
 command-line flag. The parameter to the ``--chpl_out`` option is the directory where
 you want the compiler to write your Chapel output. The compiler creates a single
-source file for each ``.proto`` file input, having a '.chpl' extension.
+source file for each ``.proto`` file input, having a ``.chpl`` extension.
 
-Only ``proto3`` messages are supported by the ``Chapel`` code generator. Ensure
+Only ``proto3`` messages are supported by the Chapel code generator. Ensure
 that each ``.proto`` file begins with a declaration of:
 
 .. code-block:: proto
@@ -23,7 +23,7 @@ that each ``.proto`` file begins with a declaration of:
 Ouput module name
 -----------------
 The name of the ouput file/module will be same as the ``package`` name. If the
-``package`` name is not specified the module takes the name of the proto
+``package`` name is not specified, the module takes the name of the proto
 file with all non-aplhanumeric characters replaced by an ``underscore``.
 
 For example a file called ``address.proto`` without the package specifier will
@@ -31,7 +31,7 @@ result in an ouput file called ``address.chpl`` with the generated code wrapped
 in a module of the same name.(Full implementation is not shown here.)
 
 .. code-block:: chpl
-  ...
+
   module address {
     record messageName {
     ...
@@ -42,7 +42,7 @@ The same proto file with the a package declaration ``package myPackage;`` will
 result in a file called ``myPackage.chpl``.
 
 .. code-block:: chpl
-  ...
+
   module myPackage {
     record messageName {
     ...
@@ -60,7 +60,7 @@ Given a simple message declaration:
   }
   
 The protocol buffer compiler generates a record called ``Foo``, which have message
-field initializers and serialization/parsing functions for wire-type encoding.
+field initializers and serialization/parsing methods for wire-type encoding.
 
  .. code-block:: chpl
   
@@ -104,12 +104,12 @@ A message can be declared inside another message. For example:
 
   message Foo {
     message Bar {
-    
+      ...
     }
   }
 
 In this case, or if a message contains a nested enum, the compiler will generate
-module level records/enums with name prefixed by the parent message name:
+module level records/enums with a name prefixed by the parent message name:
 
 .. code-block:: chpl
   
@@ -162,7 +162,7 @@ type specified in the ``.proto`` file, and the corresponding generated Chapel ty
      - int(64)
    * - fixed32
      - uint(32)
-   * - fixed(64)
+   * - fixed64
      - uint(64)
    * - sfixed32
      - int(32)
@@ -180,7 +180,7 @@ Singular Fields
 Every singular field generates a record field variable of an appropriate Chapel type. 
 Fetching a value from a field which hasn't been explicitly set will return the 
 default chapel value for that type. For example, a boolean field ``a`` will generate a
-``bool`` type variable with default value to ``false``:
+``bool`` type variable with default value ``false``:
 
 .. code-block:: chpl
   
@@ -189,10 +189,9 @@ default chapel value for that type. For example, a boolean field ``a`` will gene
   
 Repeated Fields
 ^^^^^^^^^^^^^^^
-Every repeated field generates a list of an appropriate Chapel type. 
-Fetching a value from a field which hasn't been explicitly set will return an
-empty list. For example, a repeated string field ``a`` will generate a list of
-type ``string``:
+Every repeated field generates a list type. Fetching a value from a field which
+hasn't been explicitly set will return an empty list. For example, a repeated
+string field ``a`` will generate a list of type ``string``:
 
 .. code-block:: chpl
   
@@ -211,9 +210,9 @@ Given an enumeration definition like:
     BLUE = 1234;
   }
   
-The protocol buffer compiler will generate a Chapel enum type called Color with the 
-same set of values. Nested enums also follow the same rules as nested messages explained
-above.
+The protocol buffer compiler will generate a Chapel enum type called ``Color`` with the
+same set of values. Nested enums also follow the same rules as nested messages that
+are explained above.
 
 The ``Color`` proto enum above would therefore become the following Chapel code:
 
