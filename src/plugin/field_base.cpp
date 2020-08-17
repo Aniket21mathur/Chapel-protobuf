@@ -126,6 +126,9 @@ namespace chapel {
       case FieldDescriptor::TYPE_ENUM:
         return "enum";
       case FieldDescriptor::TYPE_MESSAGE:
+        if(descriptor->is_map()) {
+          return "map";
+        }
         return "message";
       default:
         GOOGLE_LOG(FATAL)<< "Unknown field type.";

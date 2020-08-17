@@ -42,7 +42,8 @@ namespace chapel {
 
     printer->Print(
       "use ProtobufProtocolSupport;\n"
-      "use List;\n");
+      "use List;\n"
+      "use Map;\n");
     printer->Print("\n");
     
     // write children: Enums
@@ -82,11 +83,14 @@ namespace chapel {
         }
 
         for (int i = 0; i < descriptor->nested_type_count(); i++) {
-          printer->Print("// Parent $parent$\n",
-                          "parent", descriptor->name());
-          MessageGenerator messageGenerator(descriptor->nested_type(i));
-          messageGenerator.Generate(printer);
-          printer->Print("\n");
+          // Do not generate nested types for map
+          if (!IsMapEntryMessage(descriptor->nested_type(i))) {
+            printer->Print("// Parent $parent$\n",
+                            "parent", descriptor->name());
+            MessageGenerator messageGenerator(descriptor->nested_type(i));
+            messageGenerator.Generate(printer);
+            printer->Print("\n");
+          }
         }
       }
     }
@@ -107,8 +111,13 @@ namespace chapel {
   }
 
   bool ReflectionClassGenerator::HasNestedGeneratedTypes(const Descriptor* descriptor) {
-    if (descriptor->enum_type_count() > 0 || descriptor->nested_type_count() > 0) {
+    if (descriptor->enum_type_count() > 0) {
       return true;
+    }
+    for (int i = 0; i < descriptor->nested_type_count(); i++) {
+      if (!IsMapEntryMessage(descriptor->nested_type(i))) {
+        return true;
+      }
     }
     return false;
   }
