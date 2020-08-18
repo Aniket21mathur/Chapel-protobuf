@@ -645,6 +645,62 @@ module ProtobufProtocolSupport {
       return s;
     }
 
+    record Any {
+      var typeUrl: string;
+      var value: bytes;
+
+      proc packFrom(messageObj) throws {
+        var s: bytes;
+        var tmpMem = openmem();
+        var memWriter = tmpMem.writer(kind=iokind.little, locking=false);
+        var memReader = tmpMem.reader(kind=iokind.little, locking=false);
+
+        messageAppend(messageObj, 2, memWriter);
+        memWriter.close();
+        memReader.readbytes(s);
+        tmpMem.close();
+
+        this.value = s;
+        this.typeUrl = "type.googleapis.com/" + (messageObj.type):string;
+      }
+
+      proc unpackTo(ref messageObj) throws {
+        // TODO should throw an error if the url type and the messageObj type are not same.
+        var tmpMem = openmem();
+        var memWriter = tmpMem.writer(kind=iokind.little, locking=false);
+        var memReader = tmpMem.reader(kind=iokind.little, locking=false);
+
+        memWriter.write(this.value);
+        memWriter.close();
+        messageObj = messageConsume(memReader, messageObj.type);
+        tmpMem.close();
+      }
+
+      proc _serialize(binCh) throws {
+        stringAppend(this.typeUrl, 1, binCh);
+        binCh.write(this.value);
+      }
+
+      proc _deserialize(binCh) throws {
+        var (fieldNumber, wireType) = tagConsume(binCh);
+        while true {
+          var (fieldNumber, wireType) = tagConsume(binCh);
+          select fieldNumber {
+            when 1 {
+              this.typeUrl = stringConsume(binCh);
+            }
+            when 2 {
+              binCh.readbytes(this.value);
+            }
+            when -1 {
+              break;
+            }
+          }
+        }
+      }
+
+    }
+
   }
   
   pragma "no doc"
