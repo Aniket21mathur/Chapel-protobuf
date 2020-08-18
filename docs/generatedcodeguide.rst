@@ -6,6 +6,11 @@ This page describes exactly what Chapel code the protocol buffer compiler
 generates for protocol definitions using ``proto3`` syntax. You should read
 the `proto3 language guide`_ before reading this document.
 
+.. note::
+
+  The aim of this documentation is to provide a better understanding of the
+  generated code. The user is not expected to modify the generated file.
+
 Compiler Invocation
 -------------------
 The protocol buffer compiler produces Chapel output when invoked with the ``--chpl_out``
@@ -20,15 +25,27 @@ that each ``.proto`` file begins with a declaration of:
 
   syntax = "proto3";
 
-Ouput module name
+Output Module Name
 -----------------
-The name of the ouput file/module will be same as the ``package`` name. If the
+The name of the output file/module will be same as the ``package`` name. If the
 ``package`` name is not specified, the module takes the name of the proto
-file with all non-aplhanumeric characters replaced by an ``underscore``.
+file with all non-alphanumeric characters replaced by an ``underscore``.
 
 For example a file called ``address.proto`` without the package specifier will
-result in an ouput file called ``address.chpl`` with the generated code wrapped
-in a module of the same name.(Full implementation is not shown here.)
+result in an output file called ``address.chpl`` with the generated code wrapped
+in a module of the same name. (Full implementation is not shown here.)
+
+``address.proto``
+
+.. code-block:: proto
+
+  syntax = "proto3";
+
+  message messageName {
+  ...
+  }
+
+``address.chpl``
 
 .. code-block:: chpl
 
@@ -38,8 +55,22 @@ in a module of the same name.(Full implementation is not shown here.)
     }
   }
 
-The same proto file with the a package declaration ``package myPackage;`` will
+The same proto file with a package declaration ``package myPackage;`` will
 result in a file called ``myPackage.chpl``.
+
+``address.proto``
+
+.. code-block:: proto
+
+  syntax = "proto3";
+
+  package myPackage;
+
+  message messageName {
+  ...
+  }
+
+``myPackage.chpl``
 
 .. code-block:: chpl
 
@@ -59,84 +90,71 @@ Given a simple message declaration:
     int32 num = 1;
   }
   
-The protocol buffer compiler generates a record called ``Foo``, which have message
+The protocol buffer compiler generates a record called ``Foo``, which has message
 field initializers and serialization/parsing methods for wire-type encoding.
+(Full implementation is not shown here.)
 
  .. code-block:: chpl
   
   record Foo {
-
-    // Record fields will be generated corresponding to each proto message field.
+    /*
+      Record fields will be generated corresponding to each proto message field.
+    */
     var num: int(32);
     
-    // Used to store encoded byte stream of unknown fields encountered while parsing.
-    // As per proto3 documentation, unknown fields should be preserved and appended
-    // to the generated message byte stream.
+    /*
+      Used to store encoded byte stream of unknown fields encountered while parsing.
+      As per proto3 documentation, unknown fields should be preserved and appended
+      to the generated message byte stream.
+    */
     var unknownFieldStream: bytes = "";
     
-    // User exposed method for serializing data to protobuf wire format.
-    // This is a wrapper method to the actual method, it is used for making a
-    // binary writing channel out of the channel given as an input by the user. 
+    /*
+      User exposed method for serializing data to protobuf wire format.
+      This is a wrapper method to the actual method, it is used for making a
+      binary writing channel out of the channel given as an input by the user.
+    */
     proc serialize(ch) throws { ... }
     
-    // Contains the actual implementation for serializing data. Calls the
-    // append functions of the user support library. It appends the `unknownFieldStream`
-    // at the end of the message.
+    /*
+      Contains the actual implementation for serializing data. Calls the
+      `Append` functions of the user support library. It appends the `unknownFieldStream`
+      at the end of the message. This should end up as a private method when supported,
+      so a user should not call it directly.
+    */
     proc _serialize(binCh) throws { ... }
     
-    // User exposed method for parsing data from protobuf wire format.
-    // This is a wrapper method to the actual method, it is used for making a
-    // binary reading channel out of the channel given as an input by the user. 
+    /*
+      User exposed method for parsing data from protobuf wire format.
+      This is a wrapper method to the actual method, it is used for making a
+      binary reading channel out of the channel given as an input by the user.
+    */
     proc deserialize(ch) throws { ... }
     
-    // Contains the actual implementation for parsing data. Calls the consume
-    // functions of the user support library. Appends unknown fields encountered
-    // to the `unknownFieldStream` variable.
+    /*
+      Contains the actual implementation for parsing data. Calls the `Consume`
+      functions of the user support library. Appends unknown fields encountered
+      to the `unknownFieldStream` variable. This should end up as a private method
+      when supported, so a user should not call it directly.
+    */
     proc _deserialize(binCh) throws { ... }
   
-  }  
-
-Nested Types
-------------
-A message can be declared inside another message. For example:
-
-.. code-block:: proto
-
-  message Foo {
-    message Bar {
-      ...
-    }
-  }
-
-In this case, or if a message contains a nested enum, the compiler will generate
-module level records/enums with a name prefixed by the parent message name:
-
-.. code-block:: chpl
-  
-  record Foo {
-   ...
   }
   
-  // Nested Types
-  record Foo_Bar {
-    ...
-  }
-
-.. note::
-  Nested records or declaration of enums in records is currently not supported in
-  Chapel. Once we have support for these, we can declare nested type in the parent
-  record and thus avoiding the name prefix. 
-
 Fields
 ------
 The protocol buffer compiler generates a Chapel record field for each field defined
-within a message. In case of Chapel, methods equivalent to `get` and `set` in other
-languages are implicitly generated by the Chapel compiler.
+within a message. Methods equivalent to `get` and `set` in other languages are
+implicitly generated by the Chapel compiler, so do not need to be generated by
+the protocol buffer compiler.
 
 Scalar Value Types
 ^^^^^^^^^^^^^^^^^^
 A scalar message field can have one of the following types, the table shows the
 type specified in the ``.proto`` file, and the corresponding generated Chapel type:
+
+..
+  This table is intended to match the order given by the proto3 languge documentation.
 
 .. list-table::
    :widths: 50 50
@@ -177,10 +195,10 @@ type specified in the ``.proto`` file, and the corresponding generated Chapel ty
 
 Singular Fields
 ^^^^^^^^^^^^^^^
-Every singular field generates a record field variable of an appropriate Chapel type. 
+Every singular `message field`_ generates a record field variable of an appropriate Chapel type.
 Fetching a value from a field which hasn't been explicitly set will return the 
 default chapel value for that type. For example, a boolean field ``a`` will generate a
-``bool`` type variable with default value ``false``:
+variable of ``bool`` type, with default value of ``false``:
 
 .. code-block:: chpl
   
@@ -189,7 +207,7 @@ default chapel value for that type. For example, a boolean field ``a`` will gene
   
 Repeated Fields
 ^^^^^^^^^^^^^^^
-Every repeated field generates a list type. Fetching a value from a field which
+Every repeated `message field`_ generates a list type. Fetching a value from a field which
 hasn't been explicitly set will return an empty list. For example, a repeated
 string field ``a`` will generate a list of type ``string``:
 
@@ -197,7 +215,7 @@ string field ``a`` will generate a list of type ``string``:
   
   // Field "a"
   var a: list(string);
- 
+
 Enumerations
 ------------
 Given an enumeration definition like:
@@ -211,8 +229,7 @@ Given an enumeration definition like:
   }
   
 The protocol buffer compiler will generate a Chapel enum type called ``Color`` with the
-same set of values. Nested enums also follow the same rules as nested messages that
-are explained above.
+same set of values.
 
 The ``Color`` proto enum above would therefore become the following Chapel code:
 
@@ -224,5 +241,37 @@ The ``Color`` proto enum above would therefore become the following Chapel code:
     BLUE = 1234,
   }
 
+Nested Types
+------------
+A message can be declared inside another message. For example:
+
+.. code-block:: proto
+
+  message Foo {
+    message Bar {
+      ...
+    }
+  }
+
+In this case, or if a message contains a nested enum declaration, the compiler will generate
+module level records/enums with a name prefixed by the parent message name:
+
+.. code-block:: chpl
   
+  record Foo {
+   ...
+  }
+
+  // Nested Types
+  record Foo_Bar {
+    ...
+  }
+
+.. note::
+
+  Nested records or declaration of enums in records are currently not supported in
+  Chapel. Once we have support for these, we can declare nested types in the parent
+  record and thus avoid the name prefix.
+
 .. _proto3 language guide: https://developers.google.com/protocol-buffers/docs/proto3
+.. _message field: https://developers.google.com/protocol-buffers/docs/proto3#specifying_field_rules
