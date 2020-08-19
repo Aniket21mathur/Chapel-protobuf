@@ -104,6 +104,7 @@ field initializers and serialization/parsing methods for wire-type encoding.
     
     /*
       Used to store encoded byte stream of unknown fields encountered while parsing.
+
       As per proto3 documentation, unknown fields should be preserved and appended
       to the generated message byte stream.
     */
@@ -111,31 +112,37 @@ field initializers and serialization/parsing methods for wire-type encoding.
     
     /*
       User exposed method for serializing data to protobuf wire format.
-      This is a wrapper method to the actual method, it is used for making a
-      binary writing channel out of the channel given as an input by the user.
+
+      This is a wrapper method to the actual method.
     */
     proc serialize(ch) throws { ... }
     
     /*
-      Contains the actual implementation for serializing data. Calls the
-      `Append` functions of the user support library. It appends the `unknownFieldStream`
-      at the end of the message. This should end up as a private method when supported,
-      so a user should not call it directly.
+      Contains the actual implementation for serializing data.
+
+      Calls the `Append` functions of the user support library. It appends the
+      `unknownFieldStream` at the end of the message.
+
+      This should end up as a private method when supported, so a user should not
+      call it directly.
     */
     proc _serialize(binCh) throws { ... }
     
     /*
       User exposed method for parsing data from protobuf wire format.
-      This is a wrapper method to the actual method, it is used for making a
-      binary reading channel out of the channel given as an input by the user.
+
+      This is a wrapper method to the actual method.
     */
     proc deserialize(ch) throws { ... }
     
     /*
-      Contains the actual implementation for parsing data. Calls the `Consume`
-      functions of the user support library. Appends unknown fields encountered
-      to the `unknownFieldStream` variable. This should end up as a private method
-      when supported, so a user should not call it directly.
+      Contains the actual implementation for parsing data.
+
+      Calls the `Consume` functions of the user support library. Appends unknown
+      fields encountered to the `unknownFieldStream` variable.
+
+      This should end up as a private method when supported, so a user should not
+      call it directly.
     */
     proc _deserialize(binCh) throws { ... }
   
@@ -195,7 +202,7 @@ type specified in the ``.proto`` file, and the corresponding generated Chapel ty
 
 Singular Fields
 ^^^^^^^^^^^^^^^
-Every singular `message field`_ generates a record field variable of an appropriate Chapel type.
+Every `singular`_ message field generates a record field variable of an appropriate Chapel type.
 Fetching a value from a field which hasn't been explicitly set will return the 
 default chapel value for that type. For example, a boolean field ``a`` will generate a
 variable of ``bool`` type, with default value of ``false``:
@@ -207,7 +214,7 @@ variable of ``bool`` type, with default value of ``false``:
   
 Repeated Fields
 ^^^^^^^^^^^^^^^
-Every repeated `message field`_ generates a list type. Fetching a value from a field which
+Every `repeated`_ message field generates a list type. Fetching a value from a field which
 hasn't been explicitly set will return an empty list. For example, a repeated
 string field ``a`` will generate a list of type ``string``:
 
@@ -254,7 +261,8 @@ A message can be declared inside another message. For example:
   }
 
 In this case, or if a message contains a nested enum declaration, the compiler will generate
-module level records/enums with a name prefixed by the parent message name:
+module level record/enum per nested type. This generated record or enum will have a name prefixed
+by the parent message name:
 
 .. code-block:: chpl
   
@@ -274,4 +282,5 @@ module level records/enums with a name prefixed by the parent message name:
   record and thus avoid the name prefix.
 
 .. _proto3 language guide: https://developers.google.com/protocol-buffers/docs/proto3
-.. _message field: https://developers.google.com/protocol-buffers/docs/proto3#specifying_field_rules
+.. _singular: https://developers.google.com/protocol-buffers/docs/proto3#specifying_field_rules
+.. _repeated: https://developers.google.com/protocol-buffers/docs/proto3#specifying_field_rules
