@@ -86,6 +86,11 @@ namespace chapel {
     printer->Print("\n");
     printer->Indent();
 
+    printer->Print(
+      "var packageName: string = \"$package_name$\";\n",
+      "package_name", GetPackageName(descriptor_->file()));
+    printer->Print("\n");
+
     for (int i = 0; i < descriptor_->field_count(); i++) {
       const FieldDescriptor* fieldDescriptor = descriptor_->field(i);
 

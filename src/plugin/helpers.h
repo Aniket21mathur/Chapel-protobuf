@@ -47,7 +47,9 @@ namespace chapel {
   string GetMessageName(const Descriptor* descriptor);
 
   string GetEnumName(const EnumDescriptor* descriptor);
-  
+
+  string GetPackageName(const FileDescriptor* descriptor);
+
   inline bool IsMapEntryMessage(const Descriptor* descriptor) {
     return descriptor->options().map_entry();
   }

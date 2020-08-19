@@ -661,11 +661,15 @@ module ProtobufProtocolSupport {
         tmpMem.close();
 
         this.value = s;
-        this.typeUrl = "type.googleapis.com/" + (messageObj.type):string;
+        this.typeUrl = getTypeUrl(messageObj);
       }
 
       proc unpackTo(ref messageObj) throws {
-        // TODO should throw an error if the url type and the messageObj type are not same.
+        var url = getTypeUrl(messageObj);
+        if (url != this.typeUrl) {
+          throw new owned IllegalArgumentError("input message type is not same as global identifier");
+        }
+
         var tmpMem = openmem();
         var memWriter = tmpMem.writer(kind=iokind.little, locking=false);
         var memReader = tmpMem.reader(kind=iokind.little, locking=false);
@@ -676,13 +680,20 @@ module ProtobufProtocolSupport {
         tmpMem.close();
       }
 
+      proc getTypeUrl(messageObj) {
+        if (messageObj.packageName != "") {
+          return "type.googleapis.com/" + messageObj.packageName + "." + (messageObj.type):string;
+        } else {
+          return "type.googleapis.com/" + (messageObj.type):string;
+        }
+      }
+
       proc _serialize(binCh) throws {
         stringAppend(this.typeUrl, 1, binCh);
         binCh.write(this.value);
       }
 
       proc _deserialize(binCh) throws {
-        var (fieldNumber, wireType) = tagConsume(binCh);
         while true {
           var (fieldNumber, wireType) = tagConsume(binCh);
           select fieldNumber {
