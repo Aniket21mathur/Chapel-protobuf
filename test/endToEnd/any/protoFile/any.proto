@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 import "google/protobuf/any.proto";
+package any;
 
 message anyTest {
   int32 a = 1;
