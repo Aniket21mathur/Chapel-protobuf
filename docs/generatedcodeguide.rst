@@ -283,4 +283,4 @@ by the parent message name:
 
 .. _proto3 language guide: https://developers.google.com/protocol-buffers/docs/proto3
 .. _singular: https://developers.google.com/protocol-buffers/docs/proto3#specifying_field_rules
-.. _repeated: https://developers.google.com/protocol-buffers/docs/proto3#specifying_field_rules
+.. _repeated: `singular`_
