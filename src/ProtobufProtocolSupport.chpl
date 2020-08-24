@@ -667,7 +667,7 @@ module ProtobufProtocolSupport {
       proc unpackTo(ref messageObj) throws {
         var url = getTypeUrl(messageObj);
         if (url != this.typeUrl) {
-          throw new owned IllegalArgumentError("input message type is not same as global identifier");
+          throw new owned IllegalArgumentError("input message type does not match destination message type");
         }
 
         var tmpMem = openmem();
