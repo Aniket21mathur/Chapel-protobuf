@@ -682,9 +682,9 @@ module ProtobufProtocolSupport {
 
       proc getTypeUrl(messageObj) {
         if (messageObj.packageName != "") {
-          return "type.googleapis.com/" + messageObj.packageName + "." + (messageObj.type):string;
+          return "type.googleapis.com/" + messageObj.packageName + "." + messageObj.messageName;
         } else {
-          return "type.googleapis.com/" + (messageObj.type):string;
+          return "type.googleapis.com/" + messageObj.messageName;
         }
       }
 

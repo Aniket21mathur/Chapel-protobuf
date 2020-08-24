@@ -87,8 +87,13 @@ namespace chapel {
     printer->Indent();
 
     printer->Print(
-      "var packageName: string = \"$package_name$\";\n",
+      "proc packageName param { return \"$package_name$\"; }\n",
       "package_name", GetPackageName(descriptor_->file()));
+    printer->Print("\n");
+
+    printer->Print(
+      "proc messageName param { return \"$record_name$\"; }\n",
+      "record_name", record_name());
     printer->Print("\n");
 
     for (int i = 0; i < descriptor_->field_count(); i++) {
