@@ -645,6 +645,73 @@ module ProtobufProtocolSupport {
       return s;
     }
 
+    record Any {
+      var typeUrl: string;
+      var value: bytes;
+
+      proc packFrom(messageObj) throws {
+        var s: bytes;
+        var tmpMem = openmem();
+        var memWriter = tmpMem.writer(kind=iokind.little, locking=false);
+        var memReader = tmpMem.reader(kind=iokind.little, locking=false);
+
+        messageAppend(messageObj, 2, memWriter);
+        memWriter.close();
+        memReader.readbytes(s);
+        tmpMem.close();
+
+        this.value = s;
+        this.typeUrl = getTypeUrl(messageObj);
+      }
+
+      proc unpackTo(ref messageObj) throws {
+        var url = getTypeUrl(messageObj);
+        if (url != this.typeUrl) {
+          throw new owned IllegalArgumentError("input message type does not match destination message type");
+        }
+
+        var tmpMem = openmem();
+        var memWriter = tmpMem.writer(kind=iokind.little, locking=false);
+        var memReader = tmpMem.reader(kind=iokind.little, locking=false);
+
+        memWriter.write(this.value);
+        memWriter.close();
+        messageObj = messageConsume(memReader, messageObj.type);
+        tmpMem.close();
+      }
+
+      proc getTypeUrl(messageObj) {
+        if (messageObj.packageName != "") {
+          return "type.googleapis.com/" + messageObj.packageName + "." + messageObj.messageName;
+        } else {
+          return "type.googleapis.com/" + messageObj.messageName;
+        }
+      }
+
+      proc _serialize(binCh) throws {
+        stringAppend(this.typeUrl, 1, binCh);
+        binCh.write(this.value);
+      }
+
+      proc _deserialize(binCh) throws {
+        while true {
+          var (fieldNumber, wireType) = tagConsume(binCh);
+          select fieldNumber {
+            when 1 {
+              this.typeUrl = stringConsume(binCh);
+            }
+            when 2 {
+              binCh.readbytes(this.value);
+            }
+            when -1 {
+              break;
+            }
+          }
+        }
+      }
+
+    }
+
   }
   
   pragma "no doc"
