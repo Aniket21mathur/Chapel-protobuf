@@ -112,6 +112,10 @@ namespace chapel {
     return GetNestedTypeName(descriptor->containing_type(), descriptor->name());
   }
 
+  string GetOneofName(const OneofDescriptor* descriptor) {
+    return GetNestedTypeName(descriptor->containing_type(), descriptor->name());
+  }  
+
   FieldGeneratorBase* CreateFieldGenerator(const FieldDescriptor* descriptor) {
     switch (descriptor->type()) {
       case FieldDescriptor::TYPE_MESSAGE:
@@ -122,19 +126,31 @@ namespace chapel {
             return new RepeatedMessageFieldGenerator(descriptor);
           }
         } else {
-          return new MessageFieldGenerator(descriptor);
+          if (descriptor->real_containing_oneof()) {
+            return new MessageOneofFieldGenerator(descriptor);
+          } else {
+            return new MessageFieldGenerator(descriptor);
+          }
         }
       case FieldDescriptor::TYPE_ENUM:
         if (descriptor->is_repeated()) {
           return new RepeatedEnumFieldGenerator(descriptor);
         } else {
-          return new EnumFieldGenerator(descriptor);
+          if (descriptor->real_containing_oneof()) {
+            return new EnumOneofFieldGenerator(descriptor);
+          } else {
+            return new EnumFieldGenerator(descriptor);
+          }
         }
       default:
         if (descriptor->is_repeated()) {
           return new RepeatedPrimitiveFieldGenerator(descriptor);
         } else {
-          return new PrimitiveFieldGenerator(descriptor);
+          if (descriptor->real_containing_oneof()) {
+            return new PrimitiveOneofFieldGenerator(descriptor);
+          } else {
+            return new PrimitiveFieldGenerator(descriptor);
+          }
         }  
     }
   }
