@@ -188,6 +188,9 @@ The following features are currently supported
 #. `Repeated fields`_
 #. `Nested types`_
 #. `Using other message types`_
+#. `Any message type`_
+#. `Oneofs`_
+#. `Maps`_
 
 
 .. _Protocol Buffers: https://developers.google.com/protocol-buffers
@@ -201,3 +204,6 @@ The following features are currently supported
 .. _Repeated fields: https://developers.google.com/protocol-buffers/docs/proto3#specifying_field_rules
 .. _Nested types: https://developers.google.com/protocol-buffers/docs/proto3#nested
 .. _Using other message types: https://developers.google.com/protocol-buffers/docs/proto3#other
+.. _Any message type: https://developers.google.com/protocol-buffers/docs/proto3#any
+.. _Oneofs: https://developers.google.com/protocol-buffers/docs/proto3#oneof
+.. _Maps: https://developers.google.com/protocol-buffers/docs/proto3#maps
