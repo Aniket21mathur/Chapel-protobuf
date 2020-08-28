@@ -18,7 +18,6 @@
  * limitations under the License.
  */
 
-#include <google/protobuf/stubs/strutil.h>
 #include <google/protobuf/stubs/logging.h>
 
 #include <field_base.h>
@@ -154,17 +153,17 @@ namespace chapel {
       case FieldDescriptor::TYPE_ENUM:
         return "0:" + GetEnumName(descriptor->enum_type());
       case FieldDescriptor::TYPE_INT64:
-        return StrCat(descriptor->default_value_int64());
+        return std::to_string(descriptor->default_value_int64());
       case FieldDescriptor::TYPE_INT32:
-        return StrCat(descriptor->default_value_int32());
+        return std::to_string(descriptor->default_value_int32());
       case FieldDescriptor::TYPE_UINT64:
-        return StrCat(descriptor->default_value_uint64());
+        return std::to_string(descriptor->default_value_uint64());
       case FieldDescriptor::TYPE_UINT32:
-        return StrCat(descriptor->default_value_uint32());
+        return std::to_string(descriptor->default_value_uint32());
       case FieldDescriptor::TYPE_SINT64:
-        return StrCat(descriptor->default_value_int64());
+        return std::to_string(descriptor->default_value_int64());
       case FieldDescriptor::TYPE_SINT32:
-        return StrCat(descriptor->default_value_int32());
+        return std::to_string(descriptor->default_value_int32());
       case FieldDescriptor::TYPE_BYTES:
         return "b\"\"";
       case FieldDescriptor::TYPE_STRING:
@@ -172,17 +171,17 @@ namespace chapel {
       case FieldDescriptor::TYPE_BOOL:
         return "false";
       case FieldDescriptor::TYPE_FIXED64:
-        return StrCat(descriptor->default_value_uint64());
+        return std::to_string(descriptor->default_value_uint64());
       case FieldDescriptor::TYPE_FIXED32:
-        return StrCat(descriptor->default_value_uint32());
+        return std::to_string(descriptor->default_value_uint32());
       case FieldDescriptor::TYPE_FLOAT:
-        return StrCat(descriptor->default_value_float());
+        return std::to_string(descriptor->default_value_float());
       case FieldDescriptor::TYPE_DOUBLE:
-        return StrCat(descriptor->default_value_double());
+        return std::to_string(descriptor->default_value_double());
       case FieldDescriptor::TYPE_SFIXED32:
-        return StrCat(descriptor->default_value_int32());
+        return std::to_string(descriptor->default_value_int32());
       case FieldDescriptor::TYPE_SFIXED64:
-        return StrCat(descriptor->default_value_int64());
+        return std::to_string(descriptor->default_value_int64());
       default:
         GOOGLE_LOG(FATAL)<< "Unknown field type.";
         return "";
@@ -190,7 +189,7 @@ namespace chapel {
   }
 
   string FieldGeneratorBase::number() {
-    return StrCat(descriptor_->number());
+    return std::to_string(descriptor_->number());
   }
 
 }  // namespace chapel

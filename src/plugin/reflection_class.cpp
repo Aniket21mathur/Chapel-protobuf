@@ -72,7 +72,7 @@ namespace chapel {
           const FieldDescriptor* field = oneof->field(j);
           printer->Print("$field_name$ = $index$,\n",
                          "field_name", field->name(),
-                         "index", StrCat(field->number()));
+                         "index", std::to_string(field->number()));
         }
         printer->Outdent();
         printer->Print("}\n");
